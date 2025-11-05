@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="../assets/css/user-styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <!-- Registration Form -->
+            <div id="register-form" class="form active">
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Register</button>
+                     <button class="back-home-button"><a href="index.html">Home</a></button>
+                   
+                </form>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="form">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login">Phone Number or Email:</label>
+                        <input type="text" id="login" name="login" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+                
+            </div>
+
+         
+
+            <div id="profile-section" class="form" style="display: none;">
+    <h2>Profile</h2>
+    <div id="profile-info"></div>
+    <button onclick="logout()">Logout</button>
+   <a href="index.html"> <button onclick="continueToHome()">Continue</button></a>
+</div>
+        </div>
+        
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="./assets/js/user-script.js"></script>
+</body>
+</html>

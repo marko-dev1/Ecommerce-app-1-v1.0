@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitronics Store</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/carousel.css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+ <header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">Vitronics Store</h1>
+            
+            <!-- Desktop Navigation -->
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="showAllProducts()">All Products</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('electronics')">Electronics</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('phones')">Phones</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('phones accessories')">Phone Accessories</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('laptop accessories')">Laptop & Accessories</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('industrial')">Industrial</a>
+               <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
+            </div>
+            
+            <div class="admin-links">
+                <!-- <a href="admin-register.html" class="admin-link">Admin Register</a>
+                <a href="product-upload.html" class="admin-link">Add Product</a>
+ 
+                 <span class="user-greeting" id="greeting" style="cursor: pointer;" title="Click to login"></span>
+                 <a href="user-profile.html" id="username-text" class="admin-link">Login</a> -->
+
+        </div>
+
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+
+        <div class="cart-icon" onclick="showCart()">
+            🛒
+            <span id="cart-count">0</span>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-close" id="mobileClose">×</button>
+        
+        <div class="mobile-nav-links">
+            <a href="#" class="mobile-nav-link" onclick="showAllProducts(); closeMobileMenu()">All Products</a>
+            <a href="#" class="mobile-nav-link" onclick="filterByCategory('electronics'); closeMobileMenu()">Electronics</a>
+            <a href="#" class="mobile-nav-link" onclick="filterByCategory('phones'); closeMobileMenu()">Phones</a>
+            <a href="#" class="mobile-nav-link" onclick="filterByCategory('phones accessories'); closeMobileMenu()">Phone Accessories</a>
+            <a href="#" class="mobile-nav-link" onclick="filterByCategory('laptop accessories'); closeMobileMenu()">Laptop & Accessories</a>
+            <a href="#" class="mobile-nav-link" onclick="filterByCategory('industrial'); closeMobileMenu()">Industrial</a>
+            <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
+        </div>
+        
+        <!-- <div class="mobile-admin-links">
+            <a href="admin-register.html" class="mobile-admin-link" onclick="closeMobileMenu()">Admin Register</a>
+            <a href="product-upload.html" class="mobile-admin-link" onclick="closeMobileMenu()">Add Product</a>
+        </div> -->
+        
+      
+    </div>
+</header>
+
+    <main>
+   
+
+         <!-- Hero Section with Carousel -->
+    <section class="hero" id="home">
+        <div class="carousel">
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+                <img src="./img/images/phones.png" alt="Phone accessories">
+                <div class="carousel-overlay">
+                   
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+                <img src="./img/images/phone_cases_1.png" alt="Phone cases">
+                <div class="carousel-overlay">
+                   
+                </div>
+            </div>
+             <!-- Slide 2 duplicate-->
+             
+            
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+                <img src="./img/images/QC-3.0.png" alt="Chargers">
+                <div class="carousel-overlay">
+               
+                </div>
+            </div>
+             <!-- Slide 3 duplicate-->
+           
+
+         <!-- Slide 4-->
+            
+         <!-- Slide 5-->
+
+         <!-- Slide 6-->
+         
+             <!-- Slide 7-->
+             <div class="carousel-slide">
+                <img src="./img/images/TWS_JBL1.png" alt="AirPods">
+                <div class="carousel-overlay">
+            
+                </div>
+            </div>
+
+        </div>
+        
+        <button class="carousel-btn prev" id="prevBtn">&#10094;</button>
+        <button class="carousel-btn next" id="nextBtn">&#10095;</button>
+        
+        <div class="carousel-indicators" id="indicators">
+            <span class="indicator active" data-slide="0"></span>
+            <span class="indicator" data-slide="1"></span>
+            <span class="indicator" data-slide="2"></span>
+        </div>
+    </section>
+
+        <section class="products-section">
+            <div class="container">
+                <h2 id="section-title">All Products</h2>
+                <div class="products-grid" id="products-grid" >
+                    <!-- Products will be loaded here -->
+                </div>
+                <div id="loading" class="loading">Loading products...</div>
+                <div id="error-message" class="error-message" style="display: none;"></div>
+            </div>
+        </section>
+    </main>
+
+   
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Checkout Confirmation Modal -->
+<div id="checkoutModal" class="modal">
+  <div class="modal-content">
+    <h2>Confirm Checkout</h2>
+    <p id="checkoutDetails"></p>
+    <div class="modal-buttons">
+      <button id="proceedCheckout">Complete</button>
+      <button id="cancelCheckout">Cancel</button>
+    </div>
+  </div>
+</div>
+
+     <footer>
+        <div class="container">
+            <p>&copy; 2025 Vitronics Technologies. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/look.js"></script>
+    <script src="./assets/js/carousel.js"></script>
+    <script src="./assets/js/humberger.js"></script>
+    <script src="./assets/js/user-script.js"></script>
+    <script src="./assets/js/helper.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+</body>
+</html>
