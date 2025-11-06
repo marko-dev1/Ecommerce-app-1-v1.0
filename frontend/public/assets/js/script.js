@@ -428,8 +428,9 @@ class ECommerceApp {
          
 
      Toastify({
-    text: `✅ Order Confirmed!\nOrder ID: ${result.orderId}\nTotal: Ksh ${finalTotal}\nPay via M-Pesa Till No: 123456`,
-     text: `✅ This message will automatically close after 2 minutes`,
+    text: `✅ Order Confirmed!\nOrder ID: ${result.orderId}\nTotal: Ksh  ${finalTotal}
+    \nPay via M-Pesa Till No: 123456. 
+     \nThis message will automatically close after 2 minutes`,
     duration: 120000,  // auto close after 10s
     close: true,       // adds manual close button
     gravity: "top",

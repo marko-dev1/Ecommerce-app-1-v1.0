@@ -376,6 +376,8 @@ document.addEventListener('DOMContentLoaded', loadOrders);
                 <tr>
                     <td>${user.username || 'Unknown'}</td>
                     <td>${user.email || 'No email'}</td>
+                    <td>${user.phone_number || 'No phone'}</td>
+
                     <td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}</td>
                     <td>
                         <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>

@@ -9,5 +9,7 @@ router.put('/:userId/role', auth, superAdminAuth, UserController.updateUserRole)
 router.delete('/admins/:userId', auth, superAdminAuth, UserController.deleteAdmin);
 router.post('/register', UserController.register);
 router.post('/login',  UserController.login);
+// Get all users (accessible to super admin)
+router.get('/users', auth, superAdminAuth, UserController.getAllUsers);
 
 module.exports = router;
