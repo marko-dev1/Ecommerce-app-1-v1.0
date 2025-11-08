@@ -3,11 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
-const { auth, adminAuth } = require('../middleware/auth');
+const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
 
 // 🧾 Admin routes
 router.get('/', auth, adminAuth, orderController.getAllOrders);
-router.get('/:id', auth, adminAuth, orderController.getOrder);
+router.get('/:orderId', auth, adminAuth,superAdminAuth, orderController.getOrder);
 router.put('/:id/status', auth, adminAuth, orderController.updateOrderStatus);
 router.delete('/:id', auth, adminAuth, orderController.deleteOrder);
 

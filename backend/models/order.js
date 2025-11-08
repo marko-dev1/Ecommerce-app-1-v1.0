@@ -1,5 +1,3 @@
-
-
 // models/order.js
 const db = require('../config/database');
 
@@ -44,6 +42,10 @@ const Order = {
     );
     return orders[0] || null;
   },
+
+
+
+
 
   // Find orders by user ID
   findByUserId: async (userId) => {

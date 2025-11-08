@@ -108,16 +108,23 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
+
+
 // ✅ Load Profile
 async function loadProfile() {
     try {
         const response = await fetch(`${API_BASE}/profile`, {
             headers: { 'Authorization': `Bearer ${currentToken}` }
+            
         });
+        console.log("Sending token:", currentToken);
+
 
         const data = await response.json();
 
         if (response.ok) {
+            console.log('✅ Logged-in user:', data.user); // 👈 Log the user info
+
             const profileInfo = document.getElementById('profile-info');
             profileInfo.innerHTML = `
                 <p><strong>Name:</strong> ${data.user.name}</p>
@@ -128,9 +135,11 @@ async function loadProfile() {
             showMessage(data.message || 'Failed to load profile.', 'error');
         }
     } catch (error) {
+        console.error('Profile load error:', error);
         showMessage('Failed to load profile.', 'error');
     }
 }
+
 
 // ✅ Logout
 function logout() {
@@ -140,22 +149,25 @@ function logout() {
     showMessage('Logged out successfully');
 }
 
-// ✅ On Page Load
 document.addEventListener('DOMContentLoaded', async () => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
+        console.log('🔐 Existing session found. Token loaded.');
         currentToken = savedToken;
         try {
             await loadProfile();
             showProfile();
         } catch (error) {
+            console.error('Session validation failed:', error);
             localStorage.removeItem('token');
             showLogin();
         }
     } else {
+        console.log('🆕 No token found. Showing register form.');
         showRegister();
     }
 });
+
 
 function continueToHome() {
     window.location.href = '/index.html';

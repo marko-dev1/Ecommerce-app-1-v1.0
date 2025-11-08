@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 app.use('/api', userRoutes);
-console.log('📦 Loading database module...');
+console.log(' Loading database module...');
 
 // Import database with error handling
 let database;

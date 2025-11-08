@@ -15,6 +15,7 @@ router.put('/:userId/role', auth, superAdminAuth, (req, res) => UserController.u
 router.delete('/admins/:userId', auth, superAdminAuth, (req, res) => UserController.deleteAdmin(req, res));
 // Add this to your auth routes for debugging
 router.post('/debug-create-hash', AuthController.debugUserCreation);
+// router.get('/:orderId', auth, adminAuth, orderController.getOrder);
 
 // User management routes (admin and super admin)
 router.get('/users', auth, adminAuth, (req, res) => UserController.getAllUsers(req, res));

@@ -23,19 +23,27 @@ const auth = async (req, res, next) => {
     }
 };
 
+
+
 const adminAuth = async (req, res, next) => {
     try {
         if (!req.user) {
             return res.status(401).json({ error: 'Authentication required.' });
         }
 
-        const isAdmin = await User.isAdmin(req.user.id);
-        if (!isAdmin) {
+        // Check if user is either admin OR super admin
+        const [isAdmin, isSuperAdmin] = await Promise.all([
+            User.isAdmin(req.user.id),
+            User.isSuperAdmin(req.user.id)
+        ]);
+
+        if (!isAdmin && !isSuperAdmin) {
             return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
         }
 
         next();
     } catch (error) {
+        console.error('❌ adminAuth error:', error);
         res.status(500).json({ error: 'Server error during authorization.' });
     }
 };

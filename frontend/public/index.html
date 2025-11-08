@@ -23,7 +23,10 @@
                 <a href="#" class="nav-link" onclick="filterByCategory('phones accessories')">Phone Accessories</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('laptop accessories')">Laptop & Accessories</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('industrial')">Industrial</a>
+                <a href="#" class="nav-link" onclick="filterByCategory('smartWatches')">Smart Watches</a>
                <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
+              <button class="login-btn" onclick="window.location.href='/user-profile.html'">LOGIN</button>
+
             </div>
             
             <div class="admin-links">
@@ -60,14 +63,14 @@
             <a href="#" class="mobile-nav-link" onclick="filterByCategory('phones accessories'); closeMobileMenu()">Phone Accessories</a>
             <a href="#" class="mobile-nav-link" onclick="filterByCategory('laptop accessories'); closeMobileMenu()">Laptop & Accessories</a>
             <a href="#" class="mobile-nav-link" onclick="filterByCategory('industrial'); closeMobileMenu()">Industrial</a>
+             <a href="#" class="mobile-nav-link" onclick="filterByCategory('smartWatches'); closeMobileMenu()">Smart Watches</a>
             <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
+             <button class="login-btn" onclick="window.open('/user-profile.html', '_blank')">LOGIN</button>
+
         </div>
         
-        <!-- <div class="mobile-admin-links">
-            <a href="admin-register.html" class="mobile-admin-link" onclick="closeMobileMenu()">Admin Register</a>
-            <a href="product-upload.html" class="mobile-admin-link" onclick="closeMobileMenu()">Add Product</a>
-        </div> -->
-        
+       
+       
       
     </div>
 </header>
@@ -165,6 +168,20 @@
     </div>
   </div>
 </div>
+
+
+  <!-- Order Details Modal -->
+<div id="orderDetailsModal" class="order-modal">
+  <div class="order-modal-content">
+    <span class="close-btn" onclick="closeOrderModal()">&times;</span>
+    <h2>Order Details</h2>
+    <div id="orderDetailsContent" class="order-details-content">
+      <p>Loading order details...</p>
+    </div>
+  </div>
+</div>
+
+
 
      <footer>
         <div class="container">

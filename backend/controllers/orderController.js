@@ -14,38 +14,54 @@ const orderController = {
     });
   }),
 
-  // Get single order
+  
+
   getOrder: asyncHandler(async (req, res) => {
-    const { orderId } = req.params;
-    const userId = req.user.id;
-    const userRole = req.user.role;
+  const { orderId } = req.params;
+  const userId = req.user.id;
+  const userRole = req.user.role;
 
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
-    }
+  console.log('🧾 Fetching order:', { orderId, userId, userRole });
 
-    // Users can only view their own orders unless they're admin
-    if (userRole !== 'admin' && order.user_id !== userId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied'
-      });
-    }
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return res.status(404).json({
+      success: false,
+      message: 'Order not found'
+    });
+  }
 
+  // ✅ Allow admin or super_admin full access
+  if (userRole === 'admin' || userRole === 'super_admin') {
     const items = await OrderItem.findByOrderId(orderId);
-    
-    res.json({
+    return res.json({
       success: true,
       data: {
         ...order,
         items
       }
     });
-  }),
+  }
+
+  // ✅ Regular users can only view their own orders
+  if (order.user_id !== userId) {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. You can only view your own orders.'
+    });
+  }
+
+  // ✅ If this order belongs to the user
+  const items = await OrderItem.findByOrderId(orderId);
+  res.json({
+    success: true,
+    data: {
+      ...order,
+      items
+    }
+  });
+}),
+
 
   // Get user's orders
   getUserOrders: asyncHandler(async (req, res) => {
@@ -95,40 +111,6 @@ const orderController = {
       data: { orderId, totalAmount }
     });
   }),
-
-  // // Update order status (admin only)
-  // updateOrderStatus: asyncHandler(async (req, res) => {
-  //   const { orderId } = req.params;
-  //   const { status } = req.body;
-
-  //   if (!status) {
-  //     return res.status(400).json({
-  //       success: false,
-  //       message: 'Status is required'
-  //     });
-  //   }
-
-  //   const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
-  //   if (!validStatuses.includes(status)) {
-  //     return res.status(400).json({
-  //       success: false,
-  //       message: 'Invalid order status'
-  //     });
-  //   }
-
-  //   const updated = await Order.updateStatus(orderId, status);
-  //   if (!updated) {
-  //     return res.status(404).json({
-  //       success: false,
-  //       message: 'Order not found'
-  //     });
-  //   }
-
-  //   res.json({
-  //     success: true,
-  //     message: 'Order status updated successfully'
-  //   });
-  // }),
 
 
   // Update order status (admin only)

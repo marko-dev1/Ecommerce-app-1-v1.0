@@ -330,7 +330,9 @@ function displayOrders(orders) {
             </td>
             <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'Unknown'}</td>
             <td>
-                <button class="btn btn-primary" onclick="viewOrderDetails(${order.id})">View</button>
+               <button class="btn btn-primary" onclick="viewOrderDetails(${order.id})">View Details</button>
+
+
             </td>
         </tr>
     `).join('');
@@ -529,9 +531,550 @@ document.addEventListener('DOMContentLoaded', loadOrders);
             }
         }
 
-        function viewOrderDetails(orderId) {
-            alert(`Order #${orderId} details:\n\nThis would show detailed order information in a real application.`);
+
+// Improved modal creation with better styling and functionality
+function ensureModalExists() {
+    if (document.getElementById('orderDetailsModal')) {
+        return true;
+    }
+    
+    const modalHTML = `
+        <div id="orderDetailsModal" class="order-modal">
+            <div class="order-modal-overlay" onclick="closeOrderModal()"></div>
+            <div class="order-modal-content">
+                <div class="order-modal-header">
+                    <h2 class="order-modal-title">
+                        <i class="order-modal-icon">📦</i>
+                        Order Details
+                    </h2>
+                    <button class="order-modal-close" onclick="closeOrderModal()" aria-label="Close modal">
+                        &times;
+                    </button>
+                </div>
+                <div class="order-modal-body">
+                    <div id="orderDetailsContent" class="order-details-content">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Loading order details...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-modal-footer">
+                    <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                </div>
+            </div>
+        </div>
+        <style>
+            .order-modal {
+                display: none;
+                position: fixed;
+                z-index: 10000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+            
+            .order-modal-overlay {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+            }
+            
+            .order-modal-content {
+                position: relative;
+                background: #fff;
+                margin: 2rem auto;
+                border-radius: 12px;
+                width: 90%;
+                max-width: 600px;
+                max-height: 85vh;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                animation: modalSlideIn 0.3s ease-out;
+                overflow: hidden;
+            }
+            
+            .order-modal-header {
+                display: flex;
+                justify-content: between;
+                align-items: center;
+                padding: 1.5rem 1.5rem 1rem;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .order-modal-title {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #2d3748;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .order-modal-icon {
+                font-size: 1.5rem;
+            }
+            
+            .order-modal-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.25rem;
+                border-radius: 4px;
+                color: #6b7280;
+                transition: all 0.2s ease;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .order-modal-close:hover {
+                background: #f3f4f6;
+                color: #374151;
+            }
+            
+            .order-modal-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 0 1.5rem;
+            }
+            
+            .order-modal-footer {
+                padding: 1rem 1.5rem 1.5rem;
+                border-top: 1px solid #e9ecef;
+                display: flex;
+                justify-content: flex-end;
+            }
+            
+            .order-details-content {
+                padding: 1rem 0;
+            }
+            
+            .loading-state {
+                text-align: center;
+                padding: 2rem;
+                color: #6b7280;
+            }
+            
+            .loading-spinner {
+                width: 32px;
+                height: 32px;
+                border: 3px solid #e5e7eb;
+                border-top: 3px solid #3b82f6;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            }
+            
+            .error-state {
+                text-align: center;
+                padding: 2rem;
+                color: #dc2626;
+            }
+            
+            .error-icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .order-summary {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .order-info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .order-info-item {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .order-info-label {
+                font-size: 0.875rem;
+                color: #6b7280;
+                margin-bottom: 0.25rem;
+            }
+            
+            .order-info-value {
+                font-weight: 500;
+                color: #374151;
+            }
+            
+            .status-badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 20px;
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+            
+            .status-pending { background: #fef3c7; color: #92400e; }
+            .status-completed { background: #d1fae5; color: #065f46; }
+            .status-cancelled { background: #fee2e2; color: #991b1b; }
+            
+            .order-items-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .order-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .order-item:last-child {
+                border-bottom: none;
+            }
+            
+            .item-details {
+                flex: 1;
+            }
+            
+            .item-name {
+                font-weight: 500;
+                color: #374151;
+                margin-bottom: 0.25rem;
+            }
+            
+            .item-meta {
+                font-size: 0.875rem;
+                color: #6b7280;
+            }
+            
+            .item-price {
+                font-weight: 600;
+                color: #059669;
+            }
+            
+            .order-total {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 0;
+                border-top: 2px solid #e5e7eb;
+                font-weight: 600;
+                font-size: 1.125rem;
+                color: #1f2937;
+            }
+            
+            .btn {
+                padding: 0.75rem 1.5rem;
+                border: none;
+                border-radius: 8px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 0.875rem;
+            }
+            
+            .btn-secondary {
+                background: #6b7280;
+                color: white;
+            }
+            
+            .btn-secondary:hover {
+                background: #4b5563;
+            }
+            
+            @keyframes modalSlideIn {
+                from { 
+                    opacity: 0;
+                    transform: translateY(-20px) scale(0.95);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            @media (max-width: 640px) {
+                .order-modal-content {
+                    margin: 0;
+                    width: 100%;
+                    height: 100%;
+                    max-height: 100%;
+                    border-radius: 0;
+                }
+                
+                .order-info-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Add keyboard event listener for ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeOrderModal();
         }
+    });
+    
+    return true;
+}
+
+// Enhanced order details function with better error handling
+async function viewOrderDetails(orderId) {
+    console.log('=== 🧾 viewOrderDetails Debug ===');
+    console.log('Raw input orderId:', orderId, '| Type:', typeof orderId);
+
+    // Enhanced validation
+    if (!orderId || ['undefined', 'null', ''].includes(String(orderId).trim())) {
+        console.error('❌ Invalid orderId:', orderId);
+        showError('Invalid order ID provided');
+        return;
+    }
+
+    // Normalize order ID
+    let processedOrderId = orderId;
+    if (typeof orderId === 'string') {
+        const numericId = orderId.replace(/\D/g, '');
+        if (numericId && !isNaN(numericId)) {
+            processedOrderId = parseInt(numericId);
+        } else {
+            console.error('❌ No numeric ID found in:', orderId);
+            showError('Invalid order ID format');
+            return;
+        }
+    }
+
+    console.log('Processed orderId:', processedOrderId, '| Type:', typeof processedOrderId);
+
+    // Ensure modal exists and show loading state
+    ensureModalExists();
+    const modal = document.getElementById('orderDetailsModal');
+    const content = document.getElementById('orderDetailsContent');
+
+    modal.style.display = 'block';
+    content.innerHTML = `
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading order details...</p>
+        </div>
+    `;
+
+    const token = getToken();
+
+    if (!token) {
+        showAuthenticationError();
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/orders/${processedOrderId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include'
+        });
+
+        console.log('API Response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText || 'Order not found'}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Order data received:', data);
+
+        // Display the order details
+        displayOrderDetails(data.data || data);
+        
+    } catch (error) {
+        console.error('❌ Error fetching order:', error);
+        showOrderFetchError(processedOrderId, error);
+    }
+}
+
+// Enhanced order details display
+function displayOrderDetails(order) {
+    const content = document.getElementById('orderDetailsContent');
+
+    if (!content) {
+        console.error('❌ Missing element: #orderDetailsContent');
+        return;
+    }
+
+    const orderId = order.id || 'Unknown';
+    const status = order.status || 'Unknown';
+    const orderDate = order.created_at || order.orderDate || order.date || null;
+    const total = parseFloat(order.total_amount || order.total || 0);
+    const items = order.items || [];
+    const customerName = order.customer_name || order.customer?.name || 'No';
+    const customerEmail = order.customer_email || order.customer?.email || 'N/A';
+
+    // Get status badge class
+    const statusClass = `status-${status.toLowerCase()}`;
+
+    let html = `
+        <div class="order-summary">
+            <div class="order-info-grid">
+                <div class="order-info-item">
+                    <span class="order-info-label">Order Number</span>
+                    <span class="order-info-value">#${orderId}</span>
+                </div>
+                <div class="order-info-item">
+                    <span class="order-info-label">Status</span>
+                    <span class="order-info-value">
+                        <span class="status-badge ${statusClass}">${status}</span>
+                    </span>
+                </div>
+                <div class="order-info-item">
+                    <span class="order-info-label">Order Date</span>
+                    <span class="order-info-value">${formatDate(orderDate)}</span>
+                </div>
+                <div class="order-info-item">
+                    <span class="order-info-label">Customer</span>
+                    <span class="order-info-value">${escapeHtml(customerName)}</span>
+                </div>
+            </div>
+        </div>
+        
+        <h3 style="margin-bottom: 1rem; color: #374151;">Order Items</h3>
+    `;
+
+    if (items.length > 0) {
+        html += `
+            <ul class="order-items-list">
+                ${items.map(item => `
+                    <li class="order-item">
+                        <div class="item-details">
+                            <div class="item-name">${escapeHtml(item.name || item.product_name || 'Unnamed Item')}</div>
+                            <div class="item-meta">Quantity: ${item.quantity || 1}</div>
+                        </div>
+                        <div class="item-price">
+                            Ksh ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                        </div>
+                    </li>
+                `).join('')}
+            </ul>
+            <div class="order-total">
+                <span>Total Amount:</span>
+                <span>Ksh ${total.toFixed(2)}</span>
+            </div>
+        `;
+    } else {
+        html += `
+            <div style="text-align: center; padding: 2rem; color: #6b7280;">
+                <p>No items found for this order.</p>
+            </div>
+        `;
+    }
+
+    content.innerHTML = html;
+}
+
+// Enhanced close modal function
+function closeOrderModal() {
+    const modal = document.getElementById('orderDetailsModal');
+    if (modal) {
+        modal.style.display = 'none';
+        // Reset scroll position
+        const content = modal.querySelector('.order-modal-body');
+        if (content) content.scrollTop = 0;
+    }
+}
+
+// Utility functions
+function formatDate(dateString) {
+    if (!dateString) return 'Unknown date';
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    } catch {
+        return 'Invalid date';
+    }
+}
+
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Enhanced error display functions
+function showError(message) {
+    alert(`Error: ${message}`);
+}
+
+function showAuthenticationError() {
+    const content = document.getElementById('orderDetailsContent');
+    if (content) {
+        content.innerHTML = `
+            <div class="error-state">
+                <div class="error-icon">🔒</div>
+                <h3>Authentication Required</h3>
+                <p>Please log in to view order details.</p>
+                <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+            </div>
+        `;
+    }
+}
+
+function showOrderFetchError(orderId, error) {
+    const content = document.getElementById('orderDetailsContent');
+    if (content) {
+        content.innerHTML = `
+            <div class="error-state">
+                <div class="error-icon">⚠️</div>
+                <h3>Order Not Found</h3>
+                <p>Could not find order #${orderId}</p>
+                <p style="font-size: 0.875rem; opacity: 0.7;">Error: ${escapeHtml(error.message)}</p>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                    <button class="btn btn-secondary" onclick="debugOrder(${orderId})">Debug</button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Simple function to get the token (unchanged)
+function getToken() {
+    return localStorage.getItem('token') || 
+           localStorage.getItem('adminToken') || 
+           (window.token ? window.token : null);
+}
 
         // User Management
         async function deleteUser(userId) {

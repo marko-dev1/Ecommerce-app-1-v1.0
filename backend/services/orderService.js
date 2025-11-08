@@ -1,6 +1,6 @@
 const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
-const Cart = require('../models/Cart'); // optional if you need to clear user cart
+const Cart = require('../models/cart'); // optional if you need to clear user cart
 
 const orderService = {
   createOrder: async (userId, items, totalPrice, paymentMethod) => {

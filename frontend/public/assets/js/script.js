@@ -469,6 +469,8 @@ class ECommerceApp {
         proceedBtn.textContent = originalText;
     }
 };
+
+
         cancelBtn.onclick = () => {
         modal.style.display = 'none';
         };
@@ -1215,58 +1217,6 @@ Thank you! 🛒
     }
 
 
-
-//   displayProducts(products) {
-//     const grid = document.getElementById('products-grid');
-//     const loading = document.getElementById('loading');
-//     const error = document.getElementById('error-message');
-    
-//     loading.style.display = 'none';
-//     error.style.display = 'none';
-
-//     if (products.length === 0) {
-//         grid.innerHTML = '<p class="no-products" style="text-align: center; padding: 40px; color: #666; grid-column: 1 / -1;">No products found in this category.</p>';
-//         return;
-//     }
-
-//   grid.innerHTML = products.map(product => {
-//     // Use the image_url directly from the backend (it's already formatted)
-//     const imageUrl = product.image_url || '/uploads/default-product.jpg';
-    
-//     return `
-//         <div class="product-card">
-//             <div class="product-image-container" onclick="app.showProductDetail(${product.id})">
-//                 <img src="${imageUrl}"  
-//                      alt="${product.name}" 
-//                      class="product-image"
-//                      onerror="this.onerror=null; this.src='/uploads/default-product.jpg'">
-//                 ${product.stock <= 0 ? '<div class="out-of-stock-overlay">Out of Stock</div>' : ''}
-//             </div>
-            
-//             <div class="product-info">
-//                 <h3 class="product-name">${product.name}</h3>
-//                 <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>
-               
-//                 <p class="product-description">${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}</p>
-                
-//                 <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-//                     ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-//                 </div>
-//             </div> 
-            
-//             <div class="add-to-cart-info">
-//                 <button class="add-to-cart-btn" title="Add to cart"
-//                     onclick="app.addToCartFromButton(${product.id})"
-//                     ${product.stock <= 0 ? 'disabled' : ''}>
-//                     🛒
-//                 </button>
-//             </div>
-//         </div>
-//     `;
-// }).join('');
-// }
-
-
 displayProducts(products) {
   const grid = document.getElementById('products-grid');
   const loading = document.getElementById('loading');
@@ -1422,7 +1372,8 @@ displayProductModal(product) {
             'phones': 'Phones',
             'phones accessories': 'Phone Accessories',
             'laptop accessories': 'Laptop Accessories',
-            'industrial': 'Industrial Equipment'
+            'industrial': 'Industrial Equipment',
+             'smartWatches': 'Smart Watches'
         };
         
         title.textContent = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
