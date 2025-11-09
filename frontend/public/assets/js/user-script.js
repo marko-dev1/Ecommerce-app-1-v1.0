@@ -85,6 +85,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     console.log('Login data:', loginData); // Debug
 
     try {
+        // const response = await fetch(`${API_BASE}/login`, {
         const response = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -100,7 +101,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             showProfile();
             showMessage('Login successful!');
         } else {
-            showMessage(data.message || 'Login fled.', 'error');
+            showMessage(data.message || 'Login failed.', 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
@@ -127,7 +128,7 @@ async function loadProfile() {
 
             const profileInfo = document.getElementById('profile-info');
             profileInfo.innerHTML = `
-                <p><strong>Name:</strong> ${data.user.name}</p>
+                <p><strong>Name:</strong> ${data.user.username}</p>
                 <p><strong>Email:</strong> ${data.user.email}</p>
                 <p><strong>Phone Number:</strong> ${data.user.phone_number || 'N/A'}</p>
             `;

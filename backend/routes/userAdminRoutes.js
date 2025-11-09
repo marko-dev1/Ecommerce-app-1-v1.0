@@ -1,0 +1,88 @@
+// const express = require('express');
+// const router = express.Router();
+// const AuthController = require('../controllers/authController');
+// const UserController = require('../controllers/userController');
+// const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
+// router.post('/login', AuthController.login)
+
+// // Admin authentication routes
+// router.post('/login', (req, res) => AuthController.adminLogin(req, res));
+// router.get('/profile', auth, adminAuth, (req, res) => AuthController.getProfile(req, res));
+
+
+// router.post('/admins', auth, superAdminAuth, (req, res) => UserController.createAdmin(req, res));
+// router.get('/admins', auth, superAdminAuth, (req, res) => UserController.getAllAdmins(req, res));
+// router.put('/:userId/role', auth, superAdminAuth, (req, res) => UserController.updateUserRole(req, res));
+// router.delete('/admins/:userId', auth, superAdminAuth, (req, res) => UserController.deleteAdmin(req, res));
+
+// // Normal user routes
+// router.post('/register', UserController.register);
+// router.post('/login',  UserController.login);
+
+// // Get all users (accessible to super admin)
+// router.get('/users', auth, adminAuth,  UserController.getAllUsers);
+
+// // User management routes (admin and super admin)
+// router.get('/users', auth, adminAuth, (req, res) => UserController.getAllUsers(req, res));
+// router.put('/users/:userId', auth, adminAuth, (req, res) => UserController.updateUser(req, res));
+
+// module.exports = router;
+
+const express = require('express');
+const router = express.Router();
+const AuthController = require('../controllers/authController');
+const UserController = require('../controllers/userController');
+const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
+
+// ===============================
+// 🔐 AUTHENTICATION ROUTES
+// ===============================
+
+// 👤 Normal User Login
+router.post('/login', AuthController.login);
+
+// 🔐 Admin Login
+router.post('/admin/login', AuthController.adminLogin);
+
+// 👤 Register Normal User
+router.post('/register', UserController.register);
+
+// 🙍‍♂️ Get Logged-in User Profile (any authenticated user)
+router.get('/profile', auth, AuthController.getProfile);
+
+
+// ===============================
+// 🧑‍💼 ADMIN MANAGEMENT (Super Admin only)
+// ===============================
+
+// ➕ Create Admin
+router.post('/admins', auth, superAdminAuth, UserController.createAdmin);
+
+// 📜 Get All Admins
+router.get('/admins', auth, superAdminAuth, UserController.getAllAdmins);
+
+// 🔄 Update Admin Role
+router.put('/admins/:userId/role', auth, superAdminAuth, UserController.updateUserRole);
+
+// ❌ Delete Admin
+router.delete('/admins/:userId', auth, superAdminAuth, UserController.deleteAdmin);
+
+
+// ===============================
+// 👥 USER MANAGEMENT (Admin or Super Admin)
+// ===============================
+
+// 📋 Get All Users
+router.get('/users', auth, adminAuth, UserController.getAllUsers);
+
+// ✏️ Update User (Admin or Super Admin)
+// router.put('/users/:userId', auth, adminAuth, UserController.updateUser);
+
+
+// ===============================
+// 🧪 DEBUG ROUTE (optional)
+// ===============================
+router.post('/debug-hash', AuthController.debugUserCreation);
+
+
+module.exports = router;

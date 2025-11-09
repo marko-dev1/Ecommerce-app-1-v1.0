@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const userRoutes = require('./routes/userRoutes');
+const userAdminRoutes = require('./routes/userAdminRoutes');
 console.log('🔧 Starting server initialization...');
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
-app.use('/api', userRoutes);
+app.use('/api', userAdminRoutes);
 console.log(' Loading database module...');
 
 // Import database with error handling
@@ -58,13 +58,13 @@ const loadRoute = (name, path, endpoint) => {
 // Load routes one by one
 const routes = [
     { name: 'productRoutes', path: './routes/productRoutes', endpoint: '/api/products' },
-    { name: 'userRoutes', path: './routes/userRoutes', endpoint: '/api/users' },
+    { name: 'userAdminRoutes', path: './routes/userAdminRoutes', endpoint: '/api/users' },
     { name: 'orderRoutes', path: './routes/orderRoutes', endpoint: '/api/orders' },
-    { name: 'adminRoutes', path: './routes/adminRoutes', endpoint: '/api/admin' }
+    { name: 'userAdminRoutes', path: './routes/userAdminRoutes', endpoint: '/api/admin' }
 ];
 
-// const orderRoutes = require('./routes/orderRoutes');
-// app.use('/api/orders', orderRoutes);
+ const orderRoutes = require('./routes/orderRoutes');
+app.use('/api/orders', orderRoutes);
 
 let loadedCount = 0;
 routes.forEach(route => {
@@ -183,7 +183,8 @@ app.get('/', (req, res) => {
             users: '/api/users', 
             orders: '/api/orders',
             admin: '/admin',
-            adminLogin: '/admin-login'
+            adminLogin: '/admin-login',
+            login: '/api/login'
         }
     });
 });
