@@ -2,19 +2,7 @@
 const db = require('../config/database');
 
 const Order = {
-  // Find all orders
-  // findAll: async () => {
-  //   const [orders] = await db.pool.execute(`
-  //     SELECT o.*, u.username, u.email 
-  //     FROM orders o 
-  //     LEFT JOIN users u ON o.user_id = u.id 
-  //     ORDER BY o.created_at DESC
-  //   `);
-  //   return orders;
-  // },
-
-
-  findAll: async () => {
+   findAll: async () => {
   const [orders] = await db.pool.execute(`
     SELECT 
       o.id, 
