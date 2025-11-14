@@ -1,38 +1,9 @@
-// const express = require('express');
-// const router = express.Router();
-// const AuthController = require('../controllers/authController');
-// const UserController = require('../controllers/userController');
-// const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
-// router.post('/login', AuthController.login)
-
-// // Admin authentication routes
-// router.post('/login', (req, res) => AuthController.adminLogin(req, res));
-// router.get('/profile', auth, adminAuth, (req, res) => AuthController.getProfile(req, res));
-
-
-// router.post('/admins', auth, superAdminAuth, (req, res) => UserController.createAdmin(req, res));
-// router.get('/admins', auth, superAdminAuth, (req, res) => UserController.getAllAdmins(req, res));
-// router.put('/:userId/role', auth, superAdminAuth, (req, res) => UserController.updateUserRole(req, res));
-// router.delete('/admins/:userId', auth, superAdminAuth, (req, res) => UserController.deleteAdmin(req, res));
-
-// // Normal user routes
-// router.post('/register', UserController.register);
-// router.post('/login',  UserController.login);
-
-// // Get all users (accessible to super admin)
-// router.get('/users', auth, adminAuth,  UserController.getAllUsers);
-
-// // User management routes (admin and super admin)
-// router.get('/users', auth, adminAuth, (req, res) => UserController.getAllUsers(req, res));
-// router.put('/users/:userId', auth, adminAuth, (req, res) => UserController.updateUser(req, res));
-
-// module.exports = router;
 
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/authController');
 const UserController = require('../controllers/userController');
-const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
+const { auth,  superAdminAuth } = require('../middleware/auth');
 
 // ===============================
 // 🔐 AUTHENTICATION ROUTES
@@ -73,7 +44,7 @@ router.delete('/admins/:userId', auth, superAdminAuth, UserController.deleteAdmi
 // ===============================
 
 // 📋 Get All Users
-router.get('/users', auth, adminAuth, UserController.getAllUsers);
+router.get('/users', auth, UserController.getAllUsers);
 
 // ✏️ Update User (Admin or Super Admin)
 // router.put('/users/:userId', auth, adminAuth, UserController.updateUser);

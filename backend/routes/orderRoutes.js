@@ -7,7 +7,12 @@ const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
 
 // 🧾 Admin routes
 router.get('/', auth, adminAuth, orderController.getAllOrders);
-router.get('/:orderId', auth, adminAuth,superAdminAuth, orderController.getOrder);
+//Uncomment for only superadmin to access orders
+// router.get('/:orderId', auth, adminAuth,superAdminAuth, orderController.getOrder);
+
+// comment out to block general admin to access orders
+router.get('/:orderId', auth, adminAuth, orderController.getOrder);
+
 router.put('/:id/status', auth, adminAuth, orderController.updateOrderStatus);
 router.delete('/:id', auth, adminAuth, orderController.deleteOrder);
 

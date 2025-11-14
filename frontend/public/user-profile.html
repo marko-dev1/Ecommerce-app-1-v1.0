@@ -30,7 +30,7 @@
                         <input type="password" id="password" name="password" required>
                     </div>
                     <button type="submit">Register</button>
-                     <button class="back-home-button"><a href="index.html">Home</a></button>
+                     <!-- <button class="back-home-button"><a href="index.html">Home</a></button> -->
                    
                 </form>
                 <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
@@ -41,7 +41,7 @@
                 <h2>Login</h2>
                 <form id="loginForm">
                     <div class="form-group">
-                        <label for="login">Phone Number or Email:</label>
+                        <label for="login"> Email:</label>
                         <input type="text" id="login" name="login" required>
                     </div>
                     <div class="form-group">
@@ -56,17 +56,27 @@
 
          
 
-            <div id="profile-section" class="form" style="display: none;">
+            <!-- <div id="profile-section" class="form" style="display: none;">
     <h2>Profile</h2>
     <div id="profile-info"></div>
     <button onclick="logout()">Logout</button>
    <a href="index.html"> <button onclick="continueToHome()">Continue</button></a>
+</div> -->
+<div id="profile-section" class="form" style="display: none;">
+    <h2>Profile</h2>
+    <div id="profile-info"></div>
+    <button onclick="logout()">Logout</button>
+   
+    <button onclick="continueToHome()">Continue to Home</button>
 </div>
+
         </div>
         
         <div id="message" class="message"></div>
     </div>
-
-    <script src="./assets/js/user-script.js"></script>
+     <script src="./assets/js/user-script.js"></script>
+   
+    <script src="./assets/js/script.js"></script> 
+      <script src="./assets/js/usr.js"></script>
 </body>
 </html>

@@ -1611,5 +1611,6 @@ function searchProducts(query) {
     // Your logic to search products by name
 }
 
+
 // Initialize the app
 const app = new ECommerceApp();

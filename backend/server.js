@@ -137,31 +137,31 @@ app.get('/api/products', (req, res) => {
     res.json(products);
 });
 
-// Temporary orders route
-app.get('/api/orders', (req, res) => {
-    console.log('✅ TEMPORARY /api/orders called');
-    const orders = [
-        { 
-            id: 1, 
-            username: 'john_doe', 
-            email: 'john@example.com',
-            total_amount: 29999.99,
-            status: 'pending',
-            created_at: '2024-03-01T10:00:00.000Z'
-        },
-        { 
-            id: 2, 
-            username: 'jane_smith', 
-            email: 'jane@example.com',
-            total_amount: 12999.50,
-            status: 'confirmed',
-            created_at: '2024-03-02T10:00:00.000Z'
-        }
-    ];
-    res.json(orders);
-});
+// // Temporary orders route
+// app.get('/api/orders', (req, res) => {
+//     console.log('✅ TEMPORARY /api/orders called');
+//     const orders = [
+//         { 
+//             id: 1, 
+//             username: 'john_doe', 
+//             email: 'john@example.com',
+//             total_amount: 29999.99,
+//             status: 'pending',
+//             created_at: '2024-03-01T10:00:00.000Z'
+//         },
+//         { 
+//             id: 2, 
+//             username: 'jane_smith', 
+//             email: 'jane@example.com',
+//             total_amount: 12999.50,
+//             status: 'confirmed',
+//             created_at: '2024-03-02T10:00:00.000Z'
+//         }
+//     ];
+//     res.json(orders);
+// });
 
-console.log('✅ Temporary routes added');
+// console.log('✅ Temporary routes added');
 
 // Serve pages (only one definition for each)
 app.get('/admin', (req, res) => {
@@ -230,6 +230,51 @@ app.use((req, res) => {
         available: ['/api/test', '/api/health', '/api/products', '/api/users', '/api/orders']
     });
 });
+//user login display function
+// Add JWT verification middleware
+// const authenticateToken = (req, res, next) => {
+//     const authHeader = req.headers['authorization'];
+//     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+//     if (!token) {
+//         return res.status(401).json({ error: 'Access token required' });
+//     }
+
+//     jwt.verify(token, SECRET, (err, user) => {
+//         if (err) {
+//             return res.status(403).json({ error: 'Invalid or expired token' });
+//         }
+//         req.user = user;
+//         next();
+//     });
+// };
+
+// Updated /api/users endpoint
+// app.get('/api/users', authenticateToken, async (req, res) => {
+//     try {
+//         // req.user contains the decoded JWT payload
+        
+//         const [rows] = await db.pool.query(
+//     'SELECT id, email, username, role FROM users WHERE id = ?', 
+//     [req.user.id]
+// );
+
+        
+//         if (rows.length === 0) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
+
+//         const user = rows[0];
+//         res.json({
+//             email: user.email,
+//             name: user.username // This will show "Steven villier"
+//         });
+        
+//     } catch (error) {
+//         console.error('User fetch error:', error);
+//         res.status(500).json({ error: 'Server error' });
+//     }
+// });
 
 // Start server function
 const startServer = async () => {

@@ -43,7 +43,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     
     const formData = new FormData(e.target);
     const userData = {
-        name: formData.get('name'),
+        name: formData.get('username'),
         email: formData.get('email'),
         phone: formData.get('phone'),
         password: formData.get('password')
@@ -73,6 +73,44 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 });
 
 // ✅ Login
+// document.getElementById('loginForm').addEventListener('submit', async (e) => {
+//     e.preventDefault();
+    
+//     const formData = new FormData(e.target);
+//     const loginData = {
+//         email: formData.get('login'),
+//         password: formData.get('password')
+//     };
+
+//     console.log('Login data:', loginData); // Debug
+
+//     try {
+//         // const response = await fetch(`${API_BASE}/login`, {
+//         const response = await fetch(`${API_BASE}/login`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(loginData)
+//         });
+
+//         const data = await response.json();
+
+//         if (response.ok) {
+//             currentToken = data.token;
+//             localStorage.setItem('token', currentToken);
+//             await loadProfile();
+//             showProfile();
+//             showMessage('Login successful!');
+//         } else {
+//             showMessage(data.message || 'Login failed.', 'error');
+//         }
+//     } catch (error) {
+//         console.error('Login error:', error);
+//         showMessage('Login failed. Please try again.', 'error');
+//     }
+// });
+
+
+
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -82,10 +120,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         password: formData.get('password')
     };
 
-    console.log('Login data:', loginData); // Debug
+    console.log('Login data:', loginData);
 
     try {
-        // const response = await fetch(`${API_BASE}/login`, {
         const response = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -95,11 +132,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            currentToken = data.token;
-            localStorage.setItem('token', currentToken);
-            await loadProfile();
-            showProfile();
-            showMessage('Login successful!');
+            console.log('✅ Login successful, response:', data);
+            
+            // ✅ FIX: Call handleLogin to save BOTH token and user data
+            await handleLogin({
+                token: data.token,
+                user: data.user // Make sure your API returns user data
+            });
+            
         } else {
             showMessage(data.message || 'Login failed.', 'error');
         }
@@ -109,7 +149,40 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
+// ✅ Add this function to user-script.js if it doesn't exist
+async function handleLogin(response) {
+    console.log('🔐 handleLogin called with:', response);
+    
+    const { token, user } = response;
 
+    if (!token) {
+        console.error('❌ Login failed: token missing', response);
+        showMessage('Login failed: No token received', 'error');
+        return;
+    }
+
+    // ✅ Save BOTH token and user data to localStorage
+    localStorage.setItem('authToken', token); // Note: using 'authToken' not 'token'
+    
+    if (user) {
+        localStorage.setItem('userData', JSON.stringify(user));
+        console.log('✅ User data saved:', user);
+    } else {
+        console.warn('⚠️ No user data in response');
+    }
+    
+    console.log('✅ Token saved to localStorage');
+    
+    // Show profile section
+    await loadProfile();
+    showProfile();
+    showMessage('Login successful! Redirecting to home...');
+    
+    // ✅ Redirect to index.html after 2 seconds
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 50000);
+}
 
 // ✅ Load Profile
 async function loadProfile() {
@@ -156,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('🔐 Existing session found. Token loaded.');
         currentToken = savedToken;
         try {
+             console.log('Stored token:', localStorage.getItem('token'));
             await loadProfile();
             showProfile();
         } catch (error) {

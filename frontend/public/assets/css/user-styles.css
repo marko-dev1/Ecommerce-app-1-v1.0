@@ -19,7 +19,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 450px;
+    max-width: 500px;
     margin: 0 auto;
 }
 
@@ -84,7 +84,7 @@ input:focus {
 }
 
 button {
-    width: 100%;
+    /* width: 100%; */
     padding: 12px;
     background: linear-gradient(135deg, #2c5530 0%, #1e3a23 100%);
     color: white;

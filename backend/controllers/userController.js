@@ -148,6 +148,7 @@ class UserController {
       }
 
       console.log('✅ Login success for:', email);
+        console.log('✅ Login success for:', id);
 
       const token = jwt.sign(
         { id: user.id, email: user.email, role: user.role },
@@ -156,7 +157,7 @@ class UserController {
       );
 
       res.json({ 
-        message: 'Login successful', 
+        message: 'Login succeful', 
         token,
         user: {
           id: user.id,
@@ -171,9 +172,6 @@ class UserController {
     }
   }
 };
-
-
-
 
 module.exports = UserController;
 
