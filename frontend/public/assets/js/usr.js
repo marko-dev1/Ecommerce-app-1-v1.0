@@ -176,39 +176,54 @@ class AuthManager {
                         </div>
                     </div>
                 `;
-            } else {
+         } else {
                 modal.innerHTML = `
-                    <div class="modal-content orders-modal">
-                        <div class="modal-header">
-                            <h3>My Orders (${orders.length})</h3>
-                            <span class="close-modal">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <div class="orders-list">
-                                ${orders.map(order => `
-                                    <div class="order-item" data-order-id="${order.id}">
-                                        <div class="order-header">
-                                            <div class="order-title">
-                                                <h4>Order #${order.id}</h4>
-                                                <span class="order-status ${order.status}">${order.status}</span>
-                                            </div>
-                                            <div class="order-date">${new Date(order.created_at).toLocaleDateString()}</div>
-                                        </div>
-                                        <div class="order-details">
-                                            <div class="order-info">
-                                                <span class="order-total">Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
-                                                <span class="order-items">${order.items ? order.items.length : 0} items</span>
-                                            </div>
-                                            <button class="btn-view-order-details" data-order-id="${order.id}">
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </div>
-                                `).join('')}
+            <div class="modal-content orders-modal">
+                <div class="modal-header">
+                    <h3>My Orders (${orders.length})</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="orders-list">
+                        ${orders.map(order => {
+                            // Calculate total quantity
+                            const totalQuantity = order.items ? order.items.reduce((total, item) => total + (item.quantity || 1), 0) : 0;
+                            
+                            return `
+                            <div class="order-item" data-order-id="${order.id}">
+                                <div class="order-header">
+                                    <div class="order-title">
+                                <h4>Order #${order.id}</h4>
+                                <span class="order-status ${order.status}">${order.status}</span>
                             </div>
+                            <div class="order-date">${new Date(order.created_at).toLocaleDateString()}</div>
                         </div>
-                    </div>
-                `;
+                        
+                        <div class="order-product-preview">
+                            <span class="main-product">
+                                ${order.items && order.items.length > 0 ? 
+                                    order.items[0].product_name + 
+                                    (order.items.length > 1 ? ` + ${order.items.length - 1} more items` : '')
+                                    : 'No products'
+                                }
+                            </span>
+                        </div>
+                        
+                        <div class="order-details">
+                            <div class="order-info">
+                                <span class="order-total">Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
+                                <span class="order-items">${totalQuantity} ${totalQuantity === 1 ? 'item' : 'items'}</span>
+                            </div>
+                            <button class="btn-view-order-details" data-order-id="${order.id}">
+                                View Details
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>
+    </div>
+`;
                 
                 // Add event listeners to view details buttons
                 modal.querySelectorAll('.btn-view-order-details').forEach(btn => {
