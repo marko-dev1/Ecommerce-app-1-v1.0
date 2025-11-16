@@ -179,6 +179,8 @@ async function handleLogin(response) {
     await loadProfile();
     showProfile();
     showMessage('Login successful! Redirecting to home...');
+
+    
     
     // ✅ Redirect to index.html after 2 seconds
     setTimeout(() => {

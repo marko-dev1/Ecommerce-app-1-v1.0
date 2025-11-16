@@ -25,61 +25,39 @@
                 <a href="#" class="nav-link" onclick="filterByCategory('industrial')">Industrial</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('smartWatches')">Smart Watches</a>
                <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
-          
-<!-- <div class="user-menu-container">
-    <span id="username-text" class="username-hover">Guest</span>
-    <div class="user-dropdown">
-        <a href="/api/profile" class="dropdown-item">
-            <span class="dropdown-icon">👤</span>
-            User Profile
-        </a>
-        <a href="/api/orders" class="dropdown-item">
-            <span class="dropdown-icon">📦</span>
-            My Orders
-        </a>
-        <a href="change-password.html" class="dropdown-item">
-            <span class="dropdown-icon">🔒</span>
-            Change Password
-        </a>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item logout-btn" onclick="handleLogout()">
-            <span class="dropdown-icon">🚪</span>
-            Logout
-        </button>
-    </div>
-</div> -->
+
 
 <div class="user-section">
-    <div class="user-menu-container" id="user-menu-container" style="display: none;">
-        <span id="username-text" class="username-hover">Guest</span>
-        <div class="user-dropdown">
-            <a href="/api/users/profile" class="dropdown-item">
-                <span class="dropdown-icon">👤</span>
-                User Profile
-            </a>
-            <!-- <a href="/api/orders/" class="dropdown-item">
-                <span class="dropdown-icon">📦</span>
-                My Orders
-            </a> -->
+    <!-- <div class="user-menu-container" id="user-menu-container" style="display: none;"> -->
+        <div class="user-menu-container" id="user-menu-container">
 
-           <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
-    <span class="dropdown-icon">📦</span>
-    My Orders
-</a>
-            <a href="/api/pswd" class="dropdown-item">
-                <span class="dropdown-icon">🔒</span>
-                Change Password
+        <span id="username-text" class="username-hover">Guest ▼</span>
+
+        <div class="user-dropdown" id="user-dropdown">
+            <a href="/api/users/profile" class="dropdown-item">
+                <span class="dropdown-icon">👤</span> User Profile
             </a>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item logout-btn">
-                <span class="dropdown-icon">🚪</span>
-                Logout
+
+            <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
+                <span class="dropdown-icon">📦</span> My Orders
+            </a>
+
+            <a href="/api/pswd" class="dropdown-item">
+                <span class="dropdown-icon">🔒</span> Change Password
+            </a>
+          
+
+            <!-- <div class="dropdown-divider"></div> -->
+
+            <button class="dropdown-item logout-btn" id="logout-btn">
+                <span class="dropdown-icon">🚪</span> Logout
             </button>
         </div>
     </div>
-    
+
     <button class="login-btn" id="login-btn" onclick="window.location.href='user-profile.html'">Login</button>
 </div>
+
 
             </div>
             
@@ -129,6 +107,7 @@
                 Change Password
             </a>
             <div class="dropdown-divider"></div>
+           
             <button class="dropdown-item logout-btn" onclick="closeMobileMenu()">
                 <span class="dropdown-icon">🚪</span>
                 Logout
