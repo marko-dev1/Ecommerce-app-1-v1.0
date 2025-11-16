@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/authController');
 const UserController = require('../controllers/userController');
-const { auth,  superAdminAuth } = require('../middleware/auth');
+const {auth,  superAdminAuth } = require('../middleware/auth');
 
 // ===============================
 // 🔐 AUTHENTICATION ROUTES

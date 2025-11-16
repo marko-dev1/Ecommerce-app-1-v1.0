@@ -1,14 +1,15 @@
 
-// module.exports = router;
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
 const { auth, adminAuth, superAdminAuth } = require('../middleware/auth');
+const db = require('../config/database');
 
 // 🧾 Admin routes
-router.get('/', auth, adminAuth, orderController.getAllOrders);
-//Uncomment for only superadmin to access orders
-// router.get('/:orderId', auth, adminAuth,superAdminAuth, orderController.getOrder);
+router.get('/', auth, orderController.getAllOrders);
+// router.get('/', auth, adminAuth, orderController.getAllOrders);
+// Uncomment for only superadmin to access orders
+// router.get('/:orderId', auth, adminAuth, superAdminAuth, orderController.getOrder);
 
 // comment out to block general admin to access orders
 router.get('/:orderId', auth, adminAuth, orderController.getOrder);
@@ -20,19 +21,13 @@ router.delete('/:id', auth, adminAuth, orderController.deleteOrder);
 router.post('/', auth, orderController.createOrder);
 router.get('/user/:userId', auth, orderController.getUserOrders);
 
-
-
-// routes/orderRoutes.js
-
-
-const db = require('../config/database');
-
-// POST /api/orders/checkout - Create new order
-router.post('/checkout', async (req, res) => {
+// 🆕 POST /api/orders/checkout - Create new order (PROTECTED)
+router.post('/checkout', auth, async (req, res) => {
     let connection;
     try {
+        // 🚨 Get user_id from authenticated user instead of request body
+        const user_id = req.user.userId || req.user.id;
         const { 
-            user_id, 
             total_amount, 
             shipping_address, 
             payment_method, 
@@ -44,7 +39,8 @@ router.post('/checkout', async (req, res) => {
             user_id,
             total_amount,
             customer_phone,
-            item_count: cart_items ? cart_items.length : 0
+            item_count: cart_items ? cart_items.length : 0,
+            authenticated_user: req.user
         });
 
         // Validate required fields
@@ -85,7 +81,7 @@ router.post('/checkout', async (req, res) => {
                     customer_phone
                 ) VALUES (?, ?, ?, ?, ?)`,
                 [
-                    user_id || null,
+                    user_id, // 🚨 Use authenticated user ID
                     parseFloat(total_amount),
                     shipping_address,
                     payment_method || 'standard_checkout',
@@ -109,8 +105,8 @@ router.post('/checkout', async (req, res) => {
                     ) VALUES (?, ?, ?, ?, ?)`,
                     [
                         orderId,
-                        item.id || null,
-                        item.name || 'Unknown Product',
+                        item.id || item.product_id || null,
+                        item.name || item.product_name || 'Unknown Product',
                         parseFloat(item.price) || 0,
                         parseInt(item.quantity) || 1
                     ]
@@ -150,8 +146,123 @@ router.post('/checkout', async (req, res) => {
     }
 });
 
-// GET /api/orders - Get all orders
-router.get('/', async (req, res) => {
+// 🆕 GET /api/orders/user/:userId - Get user orders (PROTECTED)
+// router.get('/user/:userId', auth, async (req, res) => {
+//     try {
+//         const requestedUserId = parseInt(req.params.userId);
+//         const authenticatedUserId = req.user.userId || req.user.id;
+        
+//         console.log('👤 Fetching user orders:', {
+//             requestedUserId,
+//             authenticatedUserId,
+//             userRole: req.user.role
+//         });
+
+//         // 🚨 Security check: Users can only view their own orders unless admin
+//         if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && requestedUserId !== authenticatedUserId) {
+//             return res.status(403).json({
+//                 success: false,
+//                 message: 'Access denied. You can only view your own orders.'
+//             });
+//         }
+
+//         const [orders] = await db.pool.execute(`
+//             SELECT o.*, u.username, u.email 
+//             FROM orders o 
+//             LEFT JOIN users u ON o.user_id = u.id 
+//             WHERE o.user_id = ?
+//             ORDER BY o.created_at DESC
+//         `, [requestedUserId]);
+
+//         // For each order, get order items
+//         for (let order of orders) {
+//             const [items] = await db.pool.execute(`
+//                 SELECT * FROM order_items WHERE order_id = ?
+//             `, [order.id]);
+//             order.items = items;
+            
+//             // Calculate item totals for display
+//             order.items.forEach(item => {
+//                 item.item_total = (item.price * item.quantity).toFixed(2);
+//             });
+//         }
+
+//         console.log(`✅ Found ${orders.length} orders for user ${requestedUserId}`);
+
+//         res.json({
+//             success: true,
+//             data: orders, // 🚨 Changed from 'orders' to 'data' to match your frontend expectation
+//             count: orders.length
+//         });
+
+//     } catch (error) {
+//         console.error('❌ Error fetching user orders:', error);
+//         res.status(500).json({
+//             success: false,
+//             message: 'Failed to fetch user orders'
+//         });
+//     }
+// });
+
+
+// In your orderRoutes.js - Update the user orders route
+router.get('/user/:userId', auth, async (req, res) => {
+    try {
+        const requestedUserId = parseInt(req.params.userId);
+        const authenticatedUserId = req.user.userId || req.user.id;
+        
+        console.log('👤 Fetching user orders:', {
+            requestedUserId,
+            authenticatedUserId,
+            userRole: req.user.role
+        });
+
+        // Security check: Users can only view their own orders unless admin
+        if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && requestedUserId !== authenticatedUserId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. You can only view your own orders.'
+            });
+        }
+
+        const [orders] = await db.pool.execute(`
+            SELECT o.*, u.username, u.email 
+            FROM orders o 
+            LEFT JOIN users u ON o.user_id = u.id 
+            WHERE o.user_id = ?
+            ORDER BY o.created_at DESC
+        `, [requestedUserId]);
+
+        // 🚨 FIX: Get order items for each order
+        for (let order of orders) {
+            const [items] = await db.pool.execute(`
+                SELECT *, (price * quantity) as item_total 
+                FROM order_items 
+                WHERE order_id = ?
+            `, [order.id]);
+            order.items = items;
+            
+            console.log(`📦 Order ${order.id} has ${items.length} items`);
+        }
+
+        console.log(`✅ Found ${orders.length} orders for user ${requestedUserId}`);
+
+        res.json({
+            success: true,
+            data: orders,
+            count: orders.length
+        });
+
+    } catch (error) {
+        console.error('❌ Error fetching user orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch user orders'
+        });
+    }
+});
+// GET /api/orders - Get all orders (ADMIN ONLY)
+router.get('/', auth, adminAuth, async (req, res) => {
     try {
         console.log('📋 Fetching all orders...');
         
@@ -191,9 +302,11 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/orders/:id - Get single order with detailed items
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
         const orderId = req.params.id;
+        const authenticatedUserId = req.user.userId || req.user.id;
+        
         console.log(`📋 Fetching order ${orderId}...`);
 
         const [orders] = await db.pool.execute(`
@@ -210,13 +323,22 @@ router.get('/:id', async (req, res) => {
             });
         }
 
+        const order = orders[0];
+
+        // 🚨 Security check: Users can only view their own orders unless admin
+        if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && order.user_id !== authenticatedUserId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. You can only view your own orders.'
+            });
+        }
+
         const [items] = await db.pool.execute(`
             SELECT *, (price * quantity) as item_total 
             FROM order_items 
             WHERE order_id = ?
         `, [orderId]);
 
-        const order = orders[0];
         order.items = items;
 
         res.json({
@@ -233,8 +355,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// PUT /api/orders/:id/status - Update order status
-router.put('/:id/status', async (req, res) => {
+// PUT /api/orders/:id/status - Update order status (ADMIN ONLY)
+router.put('/:id/status', auth, adminAuth, async (req, res) => {
     try {
         const orderId = req.params.id;
         const { status } = req.body;
@@ -267,7 +389,7 @@ router.put('/:id/status', async (req, res) => {
 });
 
 // GET order items for a specific order
-router.get('/:id/items', async (req, res) => {
+router.get('/:id/items', auth, async (req, res) => {
     try {
         const orderId = req.params.id;
         const [items] = await db.pool.execute(`
@@ -300,7 +422,8 @@ router.get('/test/checkout', (req, res) => {
             'GET /': 'Get all orders', 
             'GET /:id': 'Get single order',
             'GET /:id/items': 'Get order items',
-            'PUT /:id/status': 'Update order status'
+            'PUT /:id/status': 'Update order status',
+            'GET /user/:userId': 'Get user orders'
         }
     });
 });

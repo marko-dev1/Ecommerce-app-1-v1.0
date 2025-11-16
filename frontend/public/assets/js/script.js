@@ -400,15 +400,31 @@ class ECommerceApp {
 
         console.log('🛒 Sending order data:', orderData);
 
+        // const response = await fetch('/api/orders/checkout', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(orderData)
+        // });
+
+        // console.log('📨 Response status:', response.status);
+
+        // const result = await response.json();
+        // console.log('📦 Response data:', result);
+
+
         const response = await fetch('/api/orders/checkout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}` // 🚨 ADD THIS LINE
             },
             body: JSON.stringify(orderData)
         });
 
         console.log('📨 Response status:', response.status);
+        console.log('🔐 Token used:', localStorage.getItem('authToken') ? 'Exists' : 'Missing');
 
         const result = await response.json();
         console.log('📦 Response data:', result);

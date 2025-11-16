@@ -76,66 +76,66 @@ routes.forEach(route => {
 console.log(`🎯 Routes loaded: ${loadedCount}/${routes.length} successful`);
 
 // Add temporary fallback routes to ensure admin dashboard works
-console.log('🔄 Adding temporary fallback routes...');
+// console.log('🔄 Adding temporary fallback routes...');
 
 // Temporary users route (in case userRoutes failed)
-app.get('/api/users', (req, res) => {
-    console.log('✅ TEMPORARY /api/users called');
-    const users = [
-        { 
-            id: 1, 
-            username: 'john_doe', 
-            email: 'john@example.com',
-            role: 'user',
-            created_at: '2024-01-15T10:00:00.000Z'
-        },
-        { 
-            id: 2, 
-            username: 'jane_smith', 
-            email: 'jane@example.com',
-            role: 'user',
-            created_at: '2024-01-20T10:00:00.000Z'
-        }
-    ];
-    res.json(users);
-});
+// app.get('/api/users', (req, res) => {
+//     console.log('✅ TEMPORARY /api/users called');
+//     const users = [
+//         { 
+//             id: 1, 
+//             username: 'john_doe', 
+//             email: 'john@example.com',
+//             role: 'user',
+//             created_at: '2024-01-15T10:00:00.000Z'
+//         },
+//         { 
+//             id: 2, 
+//             username: 'jane_smith', 
+//             email: 'jane@example.com',
+//             role: 'user',
+//             created_at: '2024-01-20T10:00:00.000Z'
+//         }
+//     ];
+//     res.json(users);
+// });
 
-// Temporary admins route
-app.get('/api/users/admins', (req, res) => {
-    console.log('✅ TEMPORARY /api/users/admins called');
-    const admins = [
-        { 
-            id: 1, 
-            username: 'admin', 
-            email: 'admin@example.com',
-            role: 'super_admin',
-            created_at: '2024-01-01T10:00:00.000Z'
-        }
-    ];
-    res.json(admins);
-});
+// // Temporary admins route
+// app.get('/api/users/admins', (req, res) => {
+//     console.log('✅ TEMPORARY /api/users/admins called');
+//     const admins = [
+//         { 
+//             id: 1, 
+//             username: 'admin', 
+//             email: 'admin@example.com',
+//             role: 'super_admin',
+//             created_at: '2024-01-01T10:00:00.000Z'
+//         }
+//     ];
+//     res.json(admins);
+// });
 
-// Temporary products route
-app.get('/api/products', (req, res) => {
-    console.log('✅ TEMPORARY /api/products called');
-    const products = [
-        {
-            id: 1,
-            name: 'Smartphone',
-            price: 29999.99,
-            stock: 50,
-            category: 'phones'
-        },
-        {
-            id: 2,
-            name: 'Laptop',
-            price: 89999.99,
-            stock: 25,
-            category: 'electronics'
-        }
-    ];
-    res.json(products);
-});
+// // Temporary products route
+// app.get('/api/products', (req, res) => {
+//     console.log('✅ TEMPORARY /api/products called');
+//     const products = [
+//         {
+//             id: 1,
+//             name: 'Smartphone',
+//             price: 29999.99,
+//             stock: 50,
+//             category: 'phones'
+//         },
+//         {
+//             id: 2,
+//             name: 'Laptop',
+//             price: 89999.99,
+//             stock: 25,
+//             category: 'electronics'
+//         }
+//     ];
+//     res.json(products);
+// });
 
 // // Temporary orders route
 // app.get('/api/orders', (req, res) => {

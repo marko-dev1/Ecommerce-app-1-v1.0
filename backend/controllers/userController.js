@@ -117,60 +117,124 @@ class UserController {
   }
 
 
-    static async login(req, res) {
+  //   static async login(req, res) {
+  //   try {
+  //     const { email, password } = req.body;
+  //     console.log('🟡 Login attempt:', email);
+
+  //     // Add JWT secret check
+  //     if (!SECRET) {
+  //       console.error('🔥 JWT_SECRET not configured');
+  //       return res.status(500).json({ message: 'Server configuration error' });
+  //     }
+
+  //     if (!email || !password) {
+  //       console.log('❌ Missing fields');
+  //       return res.status(400).json({ message: 'Email and password required' });
+  //     }
+
+  //     const [rows] = await db.pool.query('SELECT * FROM users WHERE email = ?', [email]);
+  //     if (rows.length === 0) {
+  //       console.log('❌ User not found');
+  //       return res.status(404).json({ message: 'User not found' });
+  //     }
+
+  //     const user = rows[0];
+  //     const valid = await bcrypt.compare(password, user.password);
+
+  //     if (!valid) {
+  //       console.log('❌ Invalid password for user:', email);
+  //       return res.status(401).json({ message: 'Invalid password' });
+  //     }
+
+  //     console.log('✅ Login success for:', email);
+  //       console.log('✅ Login success for:', id);
+
+  //     const token = jwt.sign(
+  //       { id: user.id, email: user.email, role: user.role },
+  //       SECRET,
+  //       { expiresIn: '7h' }
+  //     );
+
+  //     res.json({ 
+  //       message: 'Login succeful', 
+  //       token,
+  //       user: {
+  //         id: user.id,
+  //         email: user.email,
+  //         username: user.username,
+  //         role: user.role
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('🔥 Login error:', error);
+  //     res.status(500).json({ message: 'Server error' });
+  //   }
+  // }
+
+
+  static async login(req, res) {
     try {
-      const { email, password } = req.body;
-      console.log('🟡 Login attempt:', email);
+        const { email, password } = req.body;
+        console.log('🟡 Login attempt:', email);
 
-      // Add JWT secret check
-      if (!SECRET) {
-        console.error('🔥 JWT_SECRET not configured');
-        return res.status(500).json({ message: 'Server configuration error' });
-      }
-
-      if (!email || !password) {
-        console.log('❌ Missing fields');
-        return res.status(400).json({ message: 'Email and password required' });
-      }
-
-      const [rows] = await db.pool.query('SELECT * FROM users WHERE email = ?', [email]);
-      if (rows.length === 0) {
-        console.log('❌ User not found');
-        return res.status(404).json({ message: 'User not found' });
-      }
-
-      const user = rows[0];
-      const valid = await bcrypt.compare(password, user.password);
-
-      if (!valid) {
-        console.log('❌ Invalid password for user:', email);
-        return res.status(401).json({ message: 'Invalid password' });
-      }
-
-      console.log('✅ Login success for:', email);
-        console.log('✅ Login success for:', id);
-
-      const token = jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
-        SECRET,
-        { expiresIn: '2h' }
-      );
-
-      res.json({ 
-        message: 'Login succeful', 
-        token,
-        user: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          role: user.role
+        // Add JWT secret check
+        if (!SECRET) {
+            console.error('🔥 JWT_SECRET not configured');
+            return res.status(500).json({ message: 'Server configuration error' });
         }
-      });
+
+        if (!email || !password) {
+            console.log('❌ Missing fields');
+            return res.status(400).json({ message: 'Email and password required' });
+        }
+
+        const [rows] = await db.pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (rows.length === 0) {
+            console.log('❌ User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = rows[0];
+        const valid = await bcrypt.compare(password, user.password);
+
+        if (!valid) {
+            console.log('❌ Invalid password for user:', email);
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+
+        console.log('✅ Login success for:', email);
+        console.log('✅ User ID:', user.id);
+
+        const token = jwt.sign(
+            { 
+                userId: user.id,  // Use userId for consistency
+                email: user.email, 
+                role: user.role,
+                username: user.username 
+            },
+            SECRET,
+            { expiresIn: '7h' }
+        );
+
+        // 🚨 FIX: Return consistent response format
+        res.json({ 
+            message: 'Login successful', // Fixed typo
+            token,
+            user: {
+                id: user.id,
+                userId: user.id, // Add userId for consistency
+                email: user.email,
+                username: user.username,
+                role: user.role,
+                name: user.name || user.username // Include name field
+            }
+        });
     } catch (error) {
-      console.error('🔥 Login error:', error);
-      res.status(500).json({ message: 'Server error' });
+        console.error('🔥 Login error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-  }
+}
 };
 
 module.exports = UserController;

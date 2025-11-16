@@ -53,61 +53,113 @@ class AuthController {
     // ===============================
     // 👤 NORMAL USER LOGIN
     // ===============================
-    static async login(req, res) {
-        try {
-            // const { username, password } = req.body;
-            // console.log('👤 User login attempt:', { username });
+//     static async login(req, res) {
+//         try {
+//             // const { username, password } = req.body;
+//             // console.log('👤 User login attempt:', { username });
 
-            // if (!username || !password) {
-            //     return res.status(400).json({ error: 'Username and password are required' });
-            // }
+//             // if (!username || !password) {
+//             //     return res.status(400).json({ error: 'Username and password are required' });
+//             // }
 
-            // // Find by username or email
-            // let user = await User.findByUsername(username);
-            // if (!user) user = await User.findByEmail(username);
-            // if (!user) return res.status(401).json({ error: 'Invalid username or password' });
-            const { username, email, password } = req.body;
-const loginId = username || email;
-console.log('👤 User login attempt:', { loginId });
+//             // // Find by username or email
+//             // let user = await User.findByUsername(username);
+//             // if (!user) user = await User.findByEmail(username);
+//             // if (!user) return res.status(401).json({ error: 'Invalid username or password' });
+//             const { username, email, password } = req.body;
+// const loginId = username || email;
+// console.log('👤 User login attempt:', { loginId });
 
-if (!loginId || !password) {
-    return res.status(400).json({ error: 'Username/email and password are required' });
-}
+// if (!loginId || !password) {
+//     return res.status(400).json({ error: 'Username/email and password are required' });
+// }
 
-let user = await User.findByUsername(loginId);
-if (!user) user = await User.findByEmail(loginId);
+// let user = await User.findByUsername(loginId);
+// if (!user) user = await User.findByEmail(loginId);
 
 
-            // ✅ Check if user is a normal user
-            // if (user.role !== 'user') {
-            //     console.log('⚠️ Not a normal user (role =', user.role, ')');
-            //     return res.status(403).json({ error: 'Access denied. Please use the admin login page.' });
-            // }
+//             // ✅ Check if user is a normal user
+//             // if (user.role !== 'user') {
+//             //     console.log('⚠️ Not a normal user (role =', user.role, ')');
+//             //     return res.status(403).json({ error: 'Access denied. Please use the admin login page.' });
+//             // }
 
-            // Compare password
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) return res.status(401).json({ error: 'Invalid username or password' });
+//             // Compare password
+//             const isMatch = await bcrypt.compare(password, user.password);
+//             if (!isMatch) return res.status(401).json({ error: 'Invalid username or password' });
 
-            // Generate JWT
-            const token = jwt.sign(
-                { userId: user.id, username: user.username, role: user.role },
-                process.env.JWT_SECRET || 'your-secret-key',
-                { expiresIn: '24h' }
-            );
+//             // Generate JWT
+//             const token = jwt.sign(
+//                 { userId: user.id, username: user.username, role: user.role },
+//                 process.env.JWT_SECRET || 'your-secret-key',
+//                 { expiresIn: '24h' }
+//             );
 
-            console.log('✅ User login successful:', user.username);
-            res.json({
-                message: 'Login successful',
-                token,
-                user: { id: user.id, username: user.username, email: user.email, role: user.role, name: user.name }
-            });
+//             console.log('✅ User login successful:', user.username);
+//             res.json({
+//                 message: 'Login successful',
+//                 token,
+//                 user: { id: user.id, username: user.username, email: user.email, role: user.role, name: user.name }
+//             });
 
-        } catch (error) {
-            console.error('❌ User login error:', error);
-            res.status(500).json({ error: 'Internal server error' });
+//         } catch (error) {
+//             console.error('❌ User login error:', error);
+//             res.status(500).json({ error: 'Internal server error' });
+//         }
+//     }
+
+
+
+static async login(req, res) {
+    try {
+        const { username, email, password } = req.body;
+        const loginId = username || email;
+        console.log('👤 User login attempt:', { loginId });
+
+        if (!loginId || !password) {
+            return res.status(400).json({ error: 'Username/email and password are required' });
         }
-    }
 
+        let user = await User.findByUsername(loginId);
+        if (!user) user = await User.findByEmail(loginId);
+        if (!user) return res.status(401).json({ error: 'Invalid username or password' });
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(401).json({ error: 'Invalid username or password' });
+
+        // Generate JWT
+        const token = jwt.sign(
+            { 
+                userId: user.id, 
+                username: user.username, 
+                role: user.role 
+            },
+            process.env.JWT_SECRET || 'your-secret-key',
+            { expiresIn: '24h' }
+        );
+
+        console.log('✅ User login successful:', user.username);
+        
+        // 🚨 FIX: Return consistent response format
+        res.json({
+            message: 'Login successful',
+            token,
+            user: { 
+                id: user.id,
+                userId: user.id,
+                username: user.username, 
+                email: user.email, 
+                role: user.role, 
+                name: user.name || user.username 
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ User login error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
     // ===============================
     // 🧪 DEBUG HASH CREATION

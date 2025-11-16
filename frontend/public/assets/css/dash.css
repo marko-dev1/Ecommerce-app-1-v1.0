@@ -45,11 +45,40 @@
             margin-bottom: 30px;
         }
         
-        .stat-card {
-            background: white;
+        .stat-card-1 {
+            background: rgb(32, 238, 53);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+          .stat-card-2 {
+            background: rgb(216, 230, 18);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+          .stat-card-3 {
+            background: rgb(37, 224, 233);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+          .stat-card-4 {
+            background: rgb(22, 167, 90);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+             text-align: center;
+        }
+          .stat-card-5 {
+            background: rgb(237, 43, 234);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
         }
         
         .stat-card h3 {

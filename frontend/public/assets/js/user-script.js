@@ -1,5 +1,5 @@
 const API_BASE = '/api/users';
-let currentToken = null;
+let token = null;
 
 function showMessage(message, type = 'success') {
     const messageDiv = document.getElementById('message');
@@ -43,7 +43,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     
     const formData = new FormData(e.target);
     const userData = {
-        name: formData.get('username'),
+        name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
         password: formData.get('password')
@@ -129,6 +129,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             body: JSON.stringify(loginData)
         });
 
+      
+
         const data = await response.json();
 
         if (response.ok) {
@@ -188,10 +190,10 @@ async function handleLogin(response) {
 async function loadProfile() {
     try {
         const response = await fetch(`${API_BASE}/profile`, {
-            headers: { 'Authorization': `Bearer ${currentToken}` }
+            headers: { 'Authorization': `Bearer ${token}` }
             
         });
-        console.log("Sending token:", currentToken);
+        console.log("Sending token:", tokenoken);
 
 
         const data = await response.json();
@@ -217,7 +219,7 @@ async function loadProfile() {
 
 // ✅ Logout
 function logout() {
-    currentToken = null;
+    token = null;
     localStorage.removeItem('token');
     showLogin();
     showMessage('Logged out successfully');
@@ -227,7 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
         console.log('🔐 Existing session found. Token loaded.');
-        currentToken = savedToken;
+        token = savedToken;
         try {
              console.log('Stored token:', localStorage.getItem('token'));
             await loadProfile();
@@ -247,3 +249,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 function continueToHome() {
     window.location.href = '/index.html';
 }
+
+
+

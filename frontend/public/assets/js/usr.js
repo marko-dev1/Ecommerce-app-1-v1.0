@@ -1,7 +1,7 @@
 
-
 // class AuthManager {
 //     constructor() {
+//         this.userOrders = [];
 //         this.init();
 //     }
 
@@ -9,6 +9,7 @@
 //         document.addEventListener('DOMContentLoaded', () => {
 //             this.checkAuthStatus();
 //             this.setupEventListeners();
+//             this.setupGlobalEventHandlers();
 //         });
 //     }
 
@@ -27,6 +28,10 @@
 //                 const userName = user.username?.trim() || user.name?.trim() || user.email;
 //                 this.showAuthenticatedUI(userName);
 //                 console.log('✅ User authenticated:', userName);
+                
+//                 // Store user data for easy access
+//                 this.currentUser = user;
+                
 //             } catch (error) {
 //                 console.error('❌ Error parsing user data:', error);
 //                 this.showGuestUI();
@@ -74,6 +79,779 @@
 //         }
 //     }
 
+//     // ORDER MANAGEMENT METHODS
+
+//     async getUserOrders() {
+//         try {
+//             const user = this.currentUser || JSON.parse(localStorage.getItem('userData'));
+//             const token = localStorage.getItem('authToken');
+
+//             console.log('🔐 Debug - User:', user);
+//             console.log('🔐 Debug - Token exists:', !!token);
+
+//             if (!user || !token) {
+//                 this.showMessage('Please log in to view orders', 'error');
+//                 return [];
+//             }
+
+//             const userId = user.userId || user.id;
+//             if (!userId) {
+//                 console.error('❌ No user ID found');
+//                 return [];
+//             }
+
+//             console.log(`📦 Fetching orders for user ID: ${userId}`);
+
+//             const response = await fetch(`/api/orders/user/${userId}`, {
+//                 method: 'GET',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': `Bearer ${token}`,
+//                 },
+//             });
+
+//             console.log('🔐 Debug - Response status:', response.status);
+
+//             if (!response.ok) {
+//                 throw new Error(`HTTP error! status: ${response.status}`);
+//             }
+
+//             const data = await response.json();
+//             console.log('📦 Orders API response:', data);
+
+//             if (data.success) {
+//                 const orders = data.data || data.orders || [];
+//                 console.log(`✅ Found ${orders.length} orders`);
+//                 return orders;
+//             } else {
+//                 throw new Error(data.message || 'Failed to fetch orders');
+//             }
+
+//         } catch (error) {
+//             console.error('❌ Error fetching user orders:', error);
+//             this.showMessage('Failed to load orders: ' + error.message, 'error');
+//             return [];
+//         }
+//     }
+
+//     // 🆕 Show orders in a modal
+//     async showOrdersModal() {
+//         try {
+//             // Show loading state
+//             const modal = this.createOrdersModal();
+//             modal.innerHTML = `
+//                 <div class="modal-content orders-modal">
+//                     <div class="modal-header">
+//                         <h3>My Orders</h3>
+//                         <span class="close-modal">&times;</span>
+//                     </div>
+//                     <div class="modal-body">
+//                         <div class="loading-orders">
+//                             <p>Loading your orders...</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             `;
+//             modal.style.display = 'block';
+
+//             // Setup modal events immediately
+//             this.setupModalEvents(modal);
+
+//             // Fetch orders
+//             const orders = await this.getUserOrders();
+            
+//             // Update modal with orders
+//             if (!Array.isArray(orders) || orders.length === 0) {
+//                 modal.innerHTML = `
+//                     <div class="modal-content orders-modal">
+//                         <div class="modal-header">
+//                             <h3>My Orders</h3>
+//                             <span class="close-modal">&times;</span>
+//                         </div>
+//                         <div class="modal-body">
+//                             <div class="empty-orders">
+//                                 <p>No orders found</p>
+//                                 <p class="empty-message">You haven't placed any orders yet.</p>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+//             } else {
+//                 modal.innerHTML = `
+//                     <div class="modal-content orders-modal">
+//                         <div class="modal-header">
+//                             <h3>My Orders (${orders.length})</h3>
+//                             <span class="close-modal">&times;</span>
+//                         </div>
+//                         <div class="modal-body">
+//                             <div class="orders-list">
+//                                 ${orders.map(order => `
+//                                     <div class="order-item" data-order-id="${order.id}">
+//                                         <div class="order-header">
+//                                             <div class="order-title">
+//                                                 <h4>Order #${order.id}</h4>
+//                                                 <span class="order-status ${order.status}">${order.status}</span>
+//                                             </div>
+//                                             <div class="order-date">${new Date(order.created_at).toLocaleDateString()}</div>
+//                                         </div>
+//                                         <div class="order-details">
+//                                             <div class="order-info">
+//                                                 <span class="order-total">Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
+//                                                 <span class="order-items">${order.items ? order.items.length : 0} items</span>
+                                                
+
+                                          
+//                                             </div>
+//                                             <button class="btn-view-order-details" onclick="authManager.viewOrderDetails(${order.id})">
+//                                                 View Details
+//                                             </button>
+//                                         </div>
+//                                     </div>
+//                                 `).join('')}
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+//             }
+
+//             // Store orders for later use
+//             this.userOrders = orders;
+            
+//             // Update orders count
+//             this.updateOrdersCount(orders.length);
+            
+//             // Re-setup modal events after content update
+//             this.setupModalEvents(modal);
+            
+//         } catch (error) {
+//             console.error('Error showing orders modal:', error);
+//             this.showMessage('Failed to load orders: ' + error.message, 'error');
+            
+//             // Show error state in modal
+//             const modal = document.getElementById('orders-modal');
+//             if (modal) {
+//                 modal.innerHTML = `
+//                     <div class="modal-content orders-modal">
+//                         <div class="modal-header">
+//                             <h3>My Orders</h3>
+//                             <span class="close-modal">&times;</span>
+//                         </div>
+//                         <div class="modal-body">
+//                             <div class="error-orders">
+//                                 <p>Failed to load orders</p>
+//                                 <p class="error-message">Please try again later.</p>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+//                 this.setupModalEvents(modal);
+//             }
+//         }
+//     }
+
+//     // 🆕 Create orders modal element
+//     createOrdersModal() {
+//         let modal = document.getElementById('orders-modal');
+        
+//         if (!modal) {
+//             modal = document.createElement('div');
+//             modal.id = 'orders-modal';
+//             modal.className = 'modal';
+//             document.body.appendChild(modal);
+            
+//             // Add CSS styles if not already present
+//             this.injectModalStyles();
+//         }
+        
+//         return modal;
+//     }
+
+//     // 🆕 Setup modal events
+//     setupModalEvents(modal) {
+//         // Close modal events
+//         const closeBtn = modal.querySelector('.close-modal');
+//         if (closeBtn) {
+//             closeBtn.onclick = () => {
+//                 modal.style.display = 'none';
+//             };
+//         }
+        
+//         // Close when clicking outside
+//         modal.onclick = (e) => {
+//             if (e.target === modal) {
+//                 modal.style.display = 'none';
+//             }
+//         };
+        
+//         // Close with Escape key
+//         const escapeHandler = (e) => {
+//             if (e.key === 'Escape' && modal.style.display === 'block') {
+//                 modal.style.display = 'none';
+//                 document.removeEventListener('keydown', escapeHandler);
+//             }
+//         };
+//         document.addEventListener('keydown', escapeHandler);
+//     }
+
+//     // 🆕 Inject CSS styles for the modal
+//     injectModalStyles() {
+//         if (document.getElementById('orders-modal-styles')) return;
+        
+//         const styles = `
+//             <style id="orders-modal-styles">
+//                 .modal {
+//                     display: none;
+//                     position: fixed;
+//                     z-index: 1000;
+//                     left: 0;
+//                     top: 0;
+//                     width: 100%;
+//                     height: 100%;
+//                     background-color: rgba(0,0,0,0.5);
+//                     animation: fadeIn 0.3s;
+//                 }
+                
+//                 .orders-modal .modal-content {
+//                     background-color: #fefefe;
+//                     margin: 5% auto;
+//                     padding: 0;
+//                     border-radius: 12px;
+//                     width: 90%;
+//                     max-width: 600px;
+//                     max-height: 80vh;
+//                     overflow: hidden;
+//                     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+//                     animation: slideIn 0.3s ease-out;
+//                 }
+                
+//                 .orders-modal .modal-header {
+//                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+//                     color: white;
+//                     padding: 20px;
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: center;
+//                 }
+                
+//                 .orders-modal .modal-header h3 {
+//                     margin: 0;
+//                     font-size: 1.5rem;
+//                     font-weight: 600;
+//                 }
+                
+//                 .orders-modal .close-modal {
+//                     color: white;
+//                     font-size: 28px;
+//                     font-weight: bold;
+//                     cursor: pointer;
+//                     transition: opacity 0.2s;
+//                 }
+                
+//                 .orders-modal .close-modal:hover {
+//                     opacity: 0.7;
+//                 }
+                
+//                 .orders-modal .modal-body {
+//                     padding: 0;
+//                     max-height: 60vh;
+//                     overflow-y: auto;
+//                 }
+                
+//                 .orders-list {
+//                     padding: 20px;
+//                 }
+                
+//                 .loading-orders, .empty-orders, .error-orders {
+//                     text-align: center;
+//                     padding: 40px 20px;
+//                     color: #666;
+//                 }
+                
+//                 .error-orders {
+//                     color: #dc3545;
+//                 }
+                
+//                 .order-item {
+//                     border: 1px solid #e0e0e0;
+//                     border-radius: 8px;
+//                     padding: 16px;
+//                     margin-bottom: 12px;
+//                     background: white;
+//                     transition: all 0.2s ease;
+//                 }
+                
+//                 .order-item:hover {
+//                     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+//                     transform: translateY(-2px);
+//                 }
+                
+//                 .order-header {
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: flex-start;
+//                     margin-bottom: 12px;
+//                 }
+                
+//                 .order-title {
+//                     flex: 1;
+//                 }
+                
+//                 .order-title h4 {
+//                     margin: 0 0 4px 0;
+//                     color: #333;
+//                     font-size: 1.1rem;
+//                 }
+                
+//                 .order-status {
+//                     padding: 4px 8px;
+//                     border-radius: 12px;
+//                     font-size: 0.75rem;
+//                     font-weight: 600;
+//                     text-transform: uppercase;
+//                 }
+                
+//                 .order-status.pending { background: #fff3cd; color: #856404; }
+//                 .order-status.completed { background: #d1edff; color: #0c5460; }
+//                 .order-status.shipped { background: #d4edda; color: #155724; }
+//                 .order-status.cancelled { background: #f8d7da; color: #721c24; }
+//                 .order-status.processing { background: #fff3cd; color: #856404; }
+                
+//                 .order-date {
+//                     color: #666;
+//                     font-size: 0.9rem;
+//                 }
+                
+//                 .order-details {
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: center;
+//                 }
+                
+//                 .order-info {
+//                     display: flex;
+//                     gap: 16px;
+//                     align-items: center;
+//                 }
+                
+//                 .order-total {
+//                     font-weight: 600;
+//                     color: #2c5530;
+//                     font-size: 1.1rem;
+//                 }
+                
+//                 .order-items {
+//                     color: #666;
+//                     font-size: 0.9rem;
+//                 }
+                
+//                 .btn-view-order-details {
+//                     background: #667eea;
+//                     color: white;
+//                     border: none;
+//                     padding: 8px 16px;
+//                     border-radius: 6px;
+//                     cursor: pointer;
+//                     font-size: 0.9rem;
+//                     transition: background 0.2s;
+//                 }
+                
+//                 .btn-view-order-details:hover {
+//                     background: #5a6fd8;
+//                 }
+                
+//                 .empty-message, .error-message {
+//                     margin-top: 8px !important;
+//                     font-size: 0.9rem;
+//                 }
+                
+//                 @keyframes fadeIn {
+//                     from { opacity: 0; }
+//                     to { opacity: 1; }
+//                 }
+                
+//                 @keyframes slideIn {
+//                     from { 
+//                         opacity: 0;
+//                         transform: translateY(-50px);
+//                     }
+//                     to { 
+//                         opacity: 1;
+//                         transform: translateY(0);
+//                     }
+//                 }
+                
+//                 /* Responsive design */
+//                 @media (max-width: 768px) {
+//                     .orders-modal .modal-content {
+//                         margin: 10% auto;
+//                         width: 95%;
+//                         max-height: 85vh;
+//                     }
+                    
+//                     .order-header {
+//                         flex-direction: column;
+//                         gap: 8px;
+//                     }
+                    
+//                     .order-details {
+//                         flex-direction: column;
+//                         gap: 12px;
+//                         align-items: flex-start;
+//                     }
+                    
+//                     .order-info {
+//                         width: 100%;
+//                         justify-content: space-between;
+//                     }
+                    
+//                     .btn-view-order-details {
+//                         width: 100%;
+//                     }
+//                 }
+//             </style>
+//         `;
+        
+//         document.head.insertAdjacentHTML('beforeend', styles);
+//     }
+
+//     // 🆕 Method to open orders modal (call this from your UI)
+//     openOrdersModal() {
+//         console.log('🎯 Opening orders modal...');
+//         this.showOrdersModal();
+//     }
+
+//     // 🆕 View order details in modal
+//     async viewOrderDetails(orderId) {
+//         try {
+//             const order = await this.getOrderDetails(orderId);
+//             this.showOrderDetailsModal(order);
+//         } catch (error) {
+//             console.error('Error viewing order:', error);
+//             this.showMessage('Failed to load order details', 'error');
+//         }
+//     }
+
+//     // Get specific order details
+//     async getOrderDetails(orderId) {
+//         try {
+//             console.log(`📋 Fetching order details for: ${orderId}`);
+//             const response = await this.makeAuthenticatedRequest(`/api/orders/${orderId}`);
+                            
+//             const data = await response.json();
+
+//             if (data.success) {
+//                 return data.order;
+//             } else {
+//                 throw new Error(data.message);
+//             }
+//         } catch (error) {
+//             console.error('❌ Error fetching order details:', error);
+//             this.showMessage('Failed to load order details', 'error');
+//             throw error;
+//         }
+//     }
+
+//     // 🆕 Show order details modal
+//     showOrderDetailsModal(order) {
+//         const modal = document.getElementById('order-details-modal') || this.createOrderDetailsModal();
+        
+//         modal.innerHTML = `
+//             <div class="modal-content order-details-modal">
+//                 <div class="modal-header">
+//                     <h3>Order #${order.id}</h3>
+//                     <span class="close-modal">&times;</span>
+//                 </div>
+//                 <div class="modal-body">
+//                     <div class="order-info-section">
+//                         <h4>Order Information</h4>
+//                         <div class="info-grid">
+//                             <div class="info-item">
+//                                 <strong>Status:</strong>
+//                                 <span class="status-badge status-${order.status}">${order.status}</span>
+//                             </div>
+//                             <div class="info-item">
+//                                 <strong>Order Date:</strong>
+//                                 <span>${new Date(order.created_at).toLocaleString()}</span>
+//                             </div>
+//                             <div class="info-item">
+//                                 <strong>Total Amount:</strong>
+//                                 <span>Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
+//                             </div>
+//                             <div class="info-item">
+//                                 <strong>Shipping Address:</strong>
+//                                 <span>${order.shipping_address || 'Not specified'}</span>
+//                             </div>
+//                         </div>
+//                     </div>
+                    
+//                     <div class="order-items-section">
+//                         <h4>Order Items (${order.items ? order.items.length : 0})</h4>
+//                         <div class="items-list">
+//                             ${order.items ? order.items.map(item => `
+//                                 <div class="order-item-detail">
+//                                     <div class="item-info">
+//                                         <span class="item-name">${item.product_name || 'Unnamed Product'}</span>
+//                                         <span class="item-quantity">Quantity: ${item.quantity}</span>
+//                                     </div>
+//                                     <div class="item-pricing">
+//                                         <span class="item-price">Ksh ${parseFloat(item.price).toFixed(2)} each</span>
+//                                         <span class="item-total">Ksh ${parseFloat(item.item_total || item.price * item.quantity).toFixed(2)}</span>
+//                                     </div>
+//                                 </div>
+//                             `).join('') : '<p>No items found</p>'}
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+
+//         modal.style.display = 'block';
+//         this.setupModalEvents(modal);
+//     }
+
+//     // 🆕 Create order details modal element
+//     createOrderDetailsModal() {
+//         const modal = document.createElement('div');
+//         modal.id = 'order-details-modal';
+//         modal.className = 'modal';
+//         document.body.appendChild(modal);
+        
+//         // Add styles for order details modal
+//         this.injectOrderDetailsModalStyles();
+        
+//         return modal;
+//     }
+
+//     // 🆕 Inject CSS styles for order details modal
+//     injectOrderDetailsModalStyles() {
+//         if (document.getElementById('order-details-modal-styles')) return;
+        
+//         const styles = `
+//             <style id="order-details-modal-styles">
+//                 .order-details-modal .modal-content {
+//                     background-color: #fefefe;
+//                     margin: 5% auto;
+//                     padding: 0;
+//                     border-radius: 12px;
+//                     width: 90%;
+//                     max-width: 700px;
+//                     max-height: 80vh;
+//                     overflow: hidden;
+//                     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+//                 }
+                
+//                 .order-details-modal .modal-header {
+//                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+//                     color: white;
+//                     padding: 20px;
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: center;
+//                 }
+                
+//                 .order-details-modal .modal-body {
+//                     padding: 20px;
+//                     max-height: 60vh;
+//                     overflow-y: auto;
+//                 }
+                
+//                 .order-info-section, .order-items-section {
+//                     margin-bottom: 25px;
+//                 }
+                
+//                 .order-info-section h4, .order-items-section h4 {
+//                     margin-bottom: 15px;
+//                     color: #333;
+//                     border-bottom: 2px solid #667eea;
+//                     padding-bottom: 8px;
+//                 }
+                
+//                 .info-grid {
+//                     display: grid;
+//                     grid-template-columns: 1fr 1fr;
+//                     gap: 15px;
+//                 }
+                
+//                 .info-item {
+//                     display: flex;
+//                     flex-direction: column;
+//                     gap: 5px;
+//                 }
+                
+//                 .info-item strong {
+//                     color: #666;
+//                     font-size: 0.9rem;
+//                 }
+                
+//                 .status-badge {
+//                     padding: 4px 12px;
+//                     border-radius: 15px;
+//                     font-size: 0.8rem;
+//                     font-weight: 600;
+//                     text-transform: uppercase;
+//                     display: inline-block;
+//                     width: fit-content;
+//                 }
+                
+//                 .status-completed { background: #d4edda; color: #155724; }
+//                 .status-pending { background: #fff3cd; color: #856404; }
+//                 .status-shipped { background: #d1edff; color: #0c5460; }
+//                 .status-cancelled { background: #f8d7da; color: #721c24; }
+//                 .status-processing { background: #fff3cd; color: #856404; }
+                
+//                 .items-list {
+//                     border: 1px solid #e0e0e0;
+//                     border-radius: 8px;
+//                     overflow: hidden;
+//                 }
+                
+//                 .order-item-detail {
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: center;
+//                     padding: 15px;
+//                     border-bottom: 1px solid #e0e0e0;
+//                     background: white;
+//                 }
+                
+//                 .order-item-detail:last-child {
+//                     border-bottom: none;
+//                 }
+                
+//                 .item-info {
+//                     flex: 1;
+//                 }
+                
+//                 .item-name {
+//                     font-weight: 600;
+//                     color: #333;
+//                     display: block;
+//                     margin-bottom: 5px;
+//                 }
+                
+//                 .item-quantity {
+//                     color: #666;
+//                     font-size: 0.9rem;
+//                 }
+                
+//                 .item-pricing {
+//                     text-align: right;
+//                 }
+                
+//                 .item-price {
+//                     color: #666;
+//                     font-size: 0.9rem;
+//                     display: block;
+//                     margin-bottom: 5px;
+//                 }
+                
+//                 .item-total {
+//                     font-weight: 600;
+//                     color: #2c5530;
+//                     font-size: 1.1rem;
+//                 }
+                
+//                 @media (max-width: 768px) {
+//                     .order-details-modal .modal-content {
+//                         margin: 10% auto;
+//                         width: 95%;
+//                     }
+                    
+//                     .info-grid {
+//                         grid-template-columns: 1fr;
+//                     }
+                    
+//                     .order-item-detail {
+//                         flex-direction: column;
+//                         align-items: flex-start;
+//                         gap: 10px;
+//                     }
+                    
+//                     .item-pricing {
+//                         text-align: left;
+//                         width: 100%;
+//                         display: flex;
+//                         justify-content: space-between;
+//                     }
+//                 }
+//             </style>
+//         `;
+        
+//         document.head.insertAdjacentHTML('beforeend', styles);
+//     }
+
+//     // Update orders count in UI
+//     updateOrdersCount(count) {
+//         const ordersCountElements = document.querySelectorAll('.orders-count');
+//         ordersCountElements.forEach(element => {
+//             element.textContent = count;
+//             element.style.display = count > 0 ? 'inline' : 'none';
+//         });
+//     }
+
+//     setupEventListeners() {
+//         document.querySelectorAll('.logout-btn').forEach(btn => {
+//             btn.addEventListener('click', (e) => {
+//                 e.preventDefault();
+//                 this.handleLogout();
+//             });
+//         });
+
+//         // Handle orders button clicks
+//         document.querySelectorAll('.view-orders-btn').forEach(btn => {
+//             btn.addEventListener('click', (e) => {
+//                 e.preventDefault();
+//                 console.log('🎯 Orders button clicked, opening modal...');
+//                 this.openOrdersModal();
+//             });
+//         });
+
+//         document.addEventListener('click', (e) => {
+//             if (!e.target.closest('.user-menu-container')) {
+//                 this.closeAllDropdowns();
+//             }
+//         });
+
+//         const mobileUsername = document.getElementById('mobile-username-text');
+//         if (mobileUsername) {
+//             mobileUsername.addEventListener('click', (e) => {
+//                 e.stopPropagation();
+//                 this.toggleMobileDropdown();
+//             });
+//         }
+//     }
+
+//     // 🆕 Global event handlers for order links
+//     setupGlobalEventHandlers() {
+//         // Handle all order-related links
+//         document.addEventListener('click', (e) => {
+//             const target = e.target.closest('a');
+//             if (target) {
+//                 const href = target.getAttribute('href');
+                
+//                 // Check if this is an orders API link
+//                 if (href && href.includes('/api/orders')) {
+//                     e.preventDefault();
+//                     e.stopPropagation();
+//                     console.log('🔗 Intercepted orders API link, opening modal instead');
+//                     this.openOrdersModal();
+//                     return false;
+//                 }
+                
+//                 // Check if this is an orders page link
+//                 if (target.classList.contains('dropdown-item') && 
+//                     (target.textContent.includes('Orders') || target.textContent.includes('orders'))) {
+//                     e.preventDefault();
+//                     e.stopPropagation();
+//                     console.log('🔗 Intercepted orders dropdown item, opening modal');
+//                     this.openOrdersModal();
+//                     return false;
+//                 }
+//             }
+//         });
+//     }
+
+//     // ... rest of your existing methods (showAuthenticatedUI, showGuestUI, handleLogout, etc.)
 //     showAuthenticatedUI(userName) {
 //         this.toggleUserElements(true, userName);
 //     }
@@ -83,12 +861,11 @@
 //     }
 
 //     toggleUserElements(isAuthenticated, userName) {
-//         // Desktop elements
+//         // Your existing implementation
 //         const userMenu = document.getElementById('user-menu-container');
 //         const loginBtn = document.getElementById('login-btn');
 //         const usernameText = document.getElementById('username-text');
         
-//         // Mobile elements
 //         const mobileUserMenu = document.getElementById('mobile-user-menu');
 //         const mobileLoginBtn = document.getElementById('mobile-login-btn');
 //         const mobileUsernameText = document.getElementById('mobile-username-text');
@@ -112,32 +889,11 @@
 //         }
 //     }
 
-//     setupEventListeners() {
-//         document.querySelectorAll('.logout-btn').forEach(btn => {
-//             btn.addEventListener('click', (e) => {
-//                 e.preventDefault();
-//                 this.handleLogout();
-//             });
-//         });
-
-//         document.addEventListener('click', (e) => {
-//             if (!e.target.closest('.user-menu-container')) {
-//                 this.closeAllDropdowns();
-//             }
-//         });
-
-//         const mobileUsername = document.getElementById('mobile-username-text');
-//         if (mobileUsername) {
-//             mobileUsername.addEventListener('click', (e) => {
-//                 e.stopPropagation();
-//                 this.toggleMobileDropdown();
-//             });
-//         }
-//     }
-
 //     handleLogout() {
 //         localStorage.removeItem('authToken');
 //         localStorage.removeItem('userData');
+//         this.currentUser = null;
+//         this.userOrders = [];
         
 //         console.log('✅ User logged out');
         
@@ -163,6 +919,11 @@
 //     closeAllDropdowns() {
 //         document.querySelectorAll('.user-dropdown').forEach(dropdown => {
 //             dropdown.style.display = 'none';
+//         });
+        
+//         // Also close any open modals
+//         document.querySelectorAll('.modal').forEach(modal => {
+//             modal.style.display = 'none';
 //         });
 //     }
 
@@ -190,9 +951,18 @@
 // // Initialize the authentication manager
 // const authManager = new AuthManager();
 
+// // Global functions for easy access from HTML
+// window.viewOrder = (orderId) => authManager.viewOrderDetails(orderId);
+// window.loadUserOrders = () => authManager.getUserOrders();
+// window.openOrdersModal = () => authManager.openOrdersModal();
+// window.showOrdersModal = () => authManager.showOrdersModal();
+
+
+
 
 class AuthManager {
     constructor() {
+        this.userOrders = [];
         this.init();
     }
 
@@ -200,7 +970,7 @@ class AuthManager {
         document.addEventListener('DOMContentLoaded', () => {
             this.checkAuthStatus();
             this.setupEventListeners();
-            this.loadUserOrders(); // Automatically load user orders on page load
+            this.setupGlobalEventHandlers();
         });
     }
 
@@ -270,106 +1040,460 @@ class AuthManager {
         }
     }
 
-    // 🆕 ORDER MANAGEMENT METHODS
-
-    // Get user's orders
-    // async getUserOrders() {
-    //     try {
-    //         if (!this.currentUser) {
-    //             console.log('❌ No user data available');
-    //             return [];
-    //         }
-
-    //         console.log('📦 Fetching user orders...');
-    //         const response = await this.makeAuthenticatedRequest(`/api/orders/user/${this.currentUser.id}`);
-
-    //         // const response = await this.makeAuthenticatedRequest(`/api/orders/${orderId}`);
-
-    //         const data = await response.json();
-
-    //         if (data.success) {
-    //             console.log(`✅ Found ${data.orders.length} orders`);
-    //             this.displayOrders(data.orders);
-    //             return data.orders;
-    //         } else {
-    //             throw new Error(data.message);
-    //         }
-    //     } catch (error) {
-    //         console.error('❌ Error fetching user orders:', error);
-    //         this.showMessage('Failed to load orders', 'error');
-    //         return [];
-    //     }
-    // }
-
+    // ORDER MANAGEMENT METHODS
 
     async getUserOrders() {
-    try {
-        const user = this.currentUser || JSON.parse(localStorage.getItem('userData'));
-        const token = this.currentToken || localStorage.getItem('authToken');
-
-        if (!user) {
-            console.log('❌ No user data available');
-            this.showMessage('User not logged in', 'error');
-            return [];
-        }
-
-        if (!token) {
-            console.log('❌ No token available');
-            this.showMessage('No token found. Please log in again.', 'error');
-            return [];
-        }
-
-        console.log(`📦 Fetching orders for user: ${user.username}`);
-
-        const response = await fetch(`/api/orders/user/${user.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            console.log(`✅ Found ${data.orders.length} orders`);
-            this.displayOrders(data.orders);
-            return data.orders;
-        } else {
-            throw new Error(data.message || 'Failed to fetch orders');
-        }
-
-    } catch (error) {
-        console.error('❌ Error fetching user orders:', error);
-        this.showMessage('Failed to load orders', 'error');
-        return [];
-    }
-}
-
-
-    // Create new order
-    async createOrder(orderData) {
         try {
-            console.log('🛒 Creating new order...', orderData);
-            
-            const response = await this.makeAuthenticatedRequest('/api/orders/checkout', {
-                method: 'POST',
-                body: JSON.stringify(orderData)
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                this.showMessage('Order placed successfully!', 'success');
-                console.log('✅ Order created:', data.orderId);
-                return data;
-            } else {
-                throw new Error(data.message);
+            const user = this.currentUser || JSON.parse(localStorage.getItem('userData'));
+            const token = localStorage.getItem('authToken');
+
+            console.log('🔐 Debug - User:', user);
+            console.log('🔐 Debug - Token exists:', !!token);
+
+            if (!user || !token) {
+                this.showMessage('Please log in to view orders', 'error');
+                return [];
             }
+
+            const userId = user.userId || user.id;
+            if (!userId) {
+                console.error('❌ No user ID found');
+                return [];
+            }
+
+            console.log(`📦 Fetching orders for user ID: ${userId}`);
+
+            const response = await fetch(`/api/orders/user/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            console.log('🔐 Debug - Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('📦 Orders API response:', data);
+
+            if (data.success) {
+                const orders = data.data || data.orders || [];
+                console.log(`✅ Found ${orders.length} orders`);
+                return orders;
+            } else {
+                throw new Error(data.message || 'Failed to fetch orders');
+            }
+
         } catch (error) {
-            console.error('❌ Error creating order:', error);
-            this.showMessage('Failed to place order: ' + error.message, 'error');
-            throw error;
+            console.error('❌ Error fetching user orders:', error);
+            this.showMessage('Failed to load orders: ' + error.message, 'error');
+            return [];
+        }
+    }
+
+    // 🆕 Show orders in a modal
+    async showOrdersModal() {
+        try {
+            // Show loading state
+            const modal = this.createOrdersModal();
+            modal.innerHTML = `
+                <div class="modal-content orders-modal">
+                    <div class="modal-header">
+                        <h3>My Orders</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="loading-orders">
+                            <p>Loading your orders...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.style.display = 'block';
+
+            // Setup modal events immediately
+            this.setupModalEvents(modal);
+
+            // Fetch orders
+            const orders = await this.getUserOrders();
+            
+            // Update modal with orders
+            if (!Array.isArray(orders) || orders.length === 0) {
+                modal.innerHTML = `
+                    <div class="modal-content orders-modal">
+                        <div class="modal-header">
+                            <h3>My Orders</h3>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="empty-orders">
+                                <p>No orders found</p>
+                                <p class="empty-message">You haven't placed any orders yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                modal.innerHTML = `
+                    <div class="modal-content orders-modal">
+                        <div class="modal-header">
+                            <h3>My Orders (${orders.length})</h3>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="orders-list">
+                                ${orders.map(order => `
+                                    <div class="order-item" data-order-id="${order.id}">
+                                        <div class="order-header">
+                                            <div class="order-title">
+                                                <h4>Order #${order.id}</h4>
+                                                <span class="order-status ${order.status}">${order.status}</span>
+                                            </div>
+                                            <div class="order-date">${new Date(order.created_at).toLocaleDateString()}</div>
+                                        </div>
+                                        <div class="order-details">
+                                            <div class="order-info">
+                                                <span class="order-total">Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
+                                                <span class="order-items">${order.items ? order.items.length : 0} items</span>
+                                            </div>
+                                            <button class="btn-view-order-details" data-order-id="${order.id}">
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listeners to view details buttons
+                modal.querySelectorAll('.btn-view-order-details').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const orderId = e.target.getAttribute('data-order-id');
+                        this.viewOrderDetails(parseInt(orderId));
+                    });
+                });
+            }
+
+            // Store orders for later use
+            this.userOrders = orders;
+            
+            // Update orders count
+            this.updateOrdersCount(orders.length);
+            
+            // Re-setup modal events after content update
+            this.setupModalEvents(modal);
+            
+        } catch (error) {
+            console.error('Error showing orders modal:', error);
+            this.showMessage('Failed to load orders: ' + error.message, 'error');
+            
+            // Show error state in modal
+            const modal = document.getElementById('orders-modal');
+            if (modal) {
+                modal.innerHTML = `
+                    <div class="modal-content orders-modal">
+                        <div class="modal-header">
+                            <h3>My Orders</h3>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="error-orders">
+                                <p>Failed to load orders</p>
+                                <p class="error-message">Please try again later.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.setupModalEvents(modal);
+            }
+        }
+    }
+
+    // 🆕 Create orders modal element
+    createOrdersModal() {
+        let modal = document.getElementById('orders-modal');
+        
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'orders-modal';
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+            
+            // Add CSS styles if not already present
+            this.injectModalStyles();
+        }
+        
+        return modal;
+    }
+
+    // 🆕 Setup modal events
+    setupModalEvents(modal) {
+        // Close modal events
+        const closeBtn = modal.querySelector('.close-modal');
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                modal.style.display = 'none';
+            };
+        }
+        
+        // Close when clicking outside
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+        
+        // Close with Escape key
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+    }
+
+    // 🆕 Inject CSS styles for the modal
+    injectModalStyles() {
+        if (document.getElementById('orders-modal-styles')) return;
+        
+        const styles = `
+            <style id="orders-modal-styles">
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1000;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.5);
+                    animation: fadeIn 0.3s;
+                }
+                
+                .orders-modal .modal-content {
+                    background-color: #fefefe;
+                    margin: 5% auto;
+                    padding: 0;
+                    border-radius: 12px;
+                    width: 90%;
+                    max-width: 600px;
+                    max-height: 80vh;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    animation: slideIn 0.3s ease-out;
+                }
+                
+                .orders-modal .modal-header {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .orders-modal .modal-header h3 {
+                    margin: 0;
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                }
+                
+                .orders-modal .close-modal {
+                    color: white;
+                    font-size: 28px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: opacity 0.2s;
+                }
+                
+                .orders-modal .close-modal:hover {
+                    opacity: 0.7;
+                }
+                
+                .orders-modal .modal-body {
+                    padding: 0;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                }
+                
+                .orders-list {
+                    padding: 20px;
+                }
+                
+                .loading-orders, .empty-orders, .error-orders {
+                    text-align: center;
+                    padding: 40px 20px;
+                    color: #666;
+                }
+                
+                .error-orders {
+                    color: #dc3545;
+                }
+                
+                .order-item {
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    background: white;
+                    transition: all 0.2s ease;
+                }
+                
+                .order-item:hover {
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    transform: translateY(-2px);
+                }
+                
+                .order-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 12px;
+                }
+                
+                .order-title {
+                    flex: 1;
+                }
+                
+                .order-title h4 {
+                    margin: 0 0 4px 0;
+                    color: #333;
+                    font-size: 1.1rem;
+                }
+                
+                .order-status {
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }
+                
+                .order-status.pending { background: #fff3cd; color: #856404; }
+                .order-status.completed { background: #d1edff; color: #0c5460; }
+                .order-status.shipped { background: #d4edda; color: #155724; }
+                .order-status.cancelled { background: #f8d7da; color: #721c24; }
+                .order-status.processing { background: #fff3cd; color: #856404; }
+                
+                .order-date {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+                
+                .order-details {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .order-info {
+                    display: flex;
+                    gap: 16px;
+                    align-items: center;
+                }
+                
+                .order-total {
+                    font-weight: 600;
+                    color: #2c5530;
+                    font-size: 1.1rem;
+                }
+                
+                .order-items {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+                
+                .btn-view-order-details {
+                    background: #667eea;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    transition: background 0.2s;
+                }
+                
+                .btn-view-order-details:hover {
+                    background: #5a6fd8;
+                }
+                
+                .empty-message, .error-message {
+                    margin-top: 8px !important;
+                    font-size: 0.9rem;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                
+                @keyframes slideIn {
+                    from { 
+                        opacity: 0;
+                        transform: translateY(-50px);
+                    }
+                    to { 
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                /* Responsive design */
+                @media (max-width: 768px) {
+                    .orders-modal .modal-content {
+                        margin: 10% auto;
+                        width: 95%;
+                        max-height: 85vh;
+                    }
+                    
+                    .order-header {
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+                    
+                    .order-details {
+                        flex-direction: column;
+                        gap: 12px;
+                        align-items: flex-start;
+                    }
+                    
+                    .order-info {
+                        width: 100%;
+                        justify-content: space-between;
+                    }
+                    
+                    .btn-view-order-details {
+                        width: 100%;
+                    }
+                }
+            </style>
+        `;
+        
+        document.head.insertAdjacentHTML('beforeend', styles);
+    }
+
+    // 🆕 Method to open orders modal (call this from your UI)
+    openOrdersModal() {
+        console.log('🎯 Opening orders modal...');
+        this.showOrdersModal();
+    }
+
+    // 🆕 View order details in modal
+    async viewOrderDetails(orderId) {
+        try {
+            const order = await this.getOrderDetails(orderId);
+            this.showOrderDetailsModal(order);
+        } catch (error) {
+            console.error('Error viewing order:', error);
+            this.showMessage('Failed to load order details', 'error');
         }
     }
 
@@ -393,47 +1517,233 @@ class AuthManager {
         }
     }
 
-    // Display orders in the UI
-    displayOrders(orders) {
-        const ordersContainer = document.getElementById('user-orders-container');
-        const ordersList = document.getElementById('orders-list');
-        const emptyOrdersMessage = document.getElementById('empty-orders-message');
-
-        if (!ordersContainer) return;
-
-        if (orders.length === 0) {
-            if (emptyOrdersMessage) emptyOrdersMessage.style.display = 'block';
-            if (ordersList) ordersList.style.display = 'none';
-            return;
-        }
-
-        if (emptyOrdersMessage) emptyOrdersMessage.style.display = 'none';
-        if (ordersList) ordersList.style.display = 'block';
-
-        // Update orders list if element exists
-        if (ordersList) {
-            ordersList.innerHTML = orders.map(order => `
-                <div class="order-item" data-order-id="${order.id}">
-                    <div class="order-header">
-                        <h4>Order #${order.id}</h4>
-                        <span class="order-status ${order.status}">${order.status}</span>
+    // 🆕 Show order details modal
+    showOrderDetailsModal(order) {
+        const modal = document.getElementById('order-details-modal') || this.createOrderDetailsModal();
+        
+        modal.innerHTML = `
+            <div class="modal-content order-details-modal">
+                <div class="modal-header">
+                    <h3>Order #${order.id}</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="order-info-section">
+                        <h4>Order Information</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Status:</strong>
+                                <span class="status-badge status-${order.status}">${order.status}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Order Date:</strong>
+                                <span>${new Date(order.created_at).toLocaleString()}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Total Amount:</strong>
+                                <span>Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Shipping Address:</strong>
+                                <span>${order.shipping_address || 'Not specified'}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="order-details">
-                        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}</p>
-                        <p><strong>Total:</strong> $${parseFloat(order.total_amount).toFixed(2)}</p>
-                        <p><strong>Items:</strong> ${order.items ? order.items.length : 0}</p>
-                    </div>
-                    <div class="order-actions">
-                        <button class="btn-view-order" onclick="authManager.viewOrder(${order.id})">
-                            View Details
-                        </button>
+                    
+                    <div class="order-items-section">
+                        <h4>Order Items (${order.items ? order.items.length : 0})</h4>
+                        <div class="items-list">
+                            ${order.items ? order.items.map(item => `
+                                <div class="order-item-detail">
+                                    <div class="item-info">
+                                        <span class="item-name">${item.product_name || 'Unnamed Product'}</span>
+                                        <span class="item-quantity">Quantity: ${item.quantity}</span>
+                                    </div>
+                                    <div class="item-pricing">
+                                        <span class="item-price">Ksh ${parseFloat(item.price).toFixed(2)} each</span>
+                                        <span class="item-total">Ksh ${parseFloat(item.item_total || item.price * item.quantity).toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            `).join('') : '<p>No items found</p>'}
+                        </div>
                     </div>
                 </div>
-            `).join('');
-        }
+            </div>
+        `;
 
-        // Update orders count in user menu
-        this.updateOrdersCount(orders.length);
+        modal.style.display = 'block';
+        this.setupModalEvents(modal);
+    }
+
+    // 🆕 Create order details modal element
+    createOrderDetailsModal() {
+        const modal = document.createElement('div');
+        modal.id = 'order-details-modal';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+        
+        // Add styles for order details modal
+        this.injectOrderDetailsModalStyles();
+        
+        return modal;
+    }
+
+    // 🆕 Inject CSS styles for order details modal
+    injectOrderDetailsModalStyles() {
+        if (document.getElementById('order-details-modal-styles')) return;
+        
+        const styles = `
+            <style id="order-details-modal-styles">
+                .order-details-modal .modal-content {
+                    background-color: #fefefe;
+                    margin: 5% auto;
+                    padding: 0;
+                    border-radius: 12px;
+                    width: 90%;
+                    max-width: 700px;
+                    max-height: 80vh;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                }
+                
+                .order-details-modal .modal-header {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .order-details-modal .modal-body {
+                    padding: 20px;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                }
+                
+                .order-info-section, .order-items-section {
+                    margin-bottom: 25px;
+                }
+                
+                .order-info-section h4, .order-items-section h4 {
+                    margin-bottom: 15px;
+                    color: #333;
+                    border-bottom: 2px solid #667eea;
+                    padding-bottom: 8px;
+                }
+                
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 15px;
+                }
+                
+                .info-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+                
+                .info-item strong {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+                
+                .status-badge {
+                    padding: 4px 12px;
+                    border-radius: 15px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    display: inline-block;
+                    width: fit-content;
+                }
+                
+                .status-completed { background: #d4edda; color: #155724; }
+                .status-pending { background: #fff3cd; color: #856404; }
+                .status-shipped { background: #d1edff; color: #0c5460; }
+                .status-cancelled { background: #f8d7da; color: #721c24; }
+                .status-processing { background: #fff3cd; color: #856404; }
+                
+                .items-list {
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                
+                .order-item-detail {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px;
+                    border-bottom: 1px solid #e0e0e0;
+                    background: white;
+                }
+                
+                .order-item-detail:last-child {
+                    border-bottom: none;
+                }
+                
+                .item-info {
+                    flex: 1;
+                }
+                
+                .item-name {
+                    font-weight: 600;
+                    color: #333;
+                    display: block;
+                    margin-bottom: 5px;
+                }
+                
+                .item-quantity {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+                
+                .item-pricing {
+                    text-align: right;
+                }
+                
+                .item-price {
+                    color: #666;
+                    font-size: 0.9rem;
+                    display: block;
+                    margin-bottom: 5px;
+                }
+                
+                .item-total {
+                    font-weight: 600;
+                    color: #2c5530;
+                    font-size: 1.1rem;
+                }
+                
+                @media (max-width: 768px) {
+                    .order-details-modal .modal-content {
+                        margin: 10% auto;
+                        width: 95%;
+                    }
+                    
+                    .info-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .order-item-detail {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                    }
+                    
+                    .item-pricing {
+                        text-align: left;
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+            </style>
+        `;
+        
+        document.head.insertAdjacentHTML('beforeend', styles);
     }
 
     // Update orders count in UI
@@ -445,139 +1755,80 @@ class AuthManager {
         });
     }
 
-    // View order details
-    async viewOrder(orderId) {
-        try {
-            const order = await this.getOrderDetails(orderId);
-            
-            // Show order in modal or redirect to order details page
-            this.showOrderModal(order);
-        } catch (error) {
-            console.error('Error viewing order:', error);
-        }
-    }
-
-    // Show order details modal
-    showOrderModal(order) {
-        // Create or show modal with order details
-        const modal = document.getElementById('order-details-modal') || this.createOrderModal();
-        
-        modal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Order #${order.id}</h3>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="order-info">
-                        <p><strong>Status:</strong> <span class="status-${order.status}">${order.status}</span></p>
-                        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
-                        <p><strong>Total Amount:</strong> $${parseFloat(order.total_amount).toFixed(2)}</p>
-                        <p><strong>Shipping Address:</strong> ${order.shipping_address}</p>
-                    </div>
-                    
-                    <div class="order-items">
-                        <h4>Order Items (${order.items.length})</h4>
-                        ${order.items.map(item => `
-                            <div class="order-item-detail">
-                                <span class="item-name">${item.product_name}</span>
-                                <span class="item-quantity">Qty: ${item.quantity}</span>
-                                <span class="item-price">$${parseFloat(item.price).toFixed(2)}</span>
-                                <span class="item-total">$${parseFloat(item.item_total || item.price * item.quantity).toFixed(2)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        modal.style.display = 'block';
-        
-        // Close modal event
-        modal.querySelector('.close-modal').onclick = () => {
-            modal.style.display = 'none';
-        };
-    }
-
-    // Create order modal element
-    createOrderModal() {
-        const modal = document.createElement('div');
-        modal.id = 'order-details-modal';
-        modal.className = 'modal';
-        document.body.appendChild(modal);
-        return modal;
-    }
-
-    // Load user orders automatically
-    async loadUserOrders() {
-        if (this.currentUser) {
-            await this.getUserOrders();
-        }
-    }
-
-    // 🆕 Checkout helper method
-    async processCheckout(cartItems, totalAmount, shippingInfo) {
-        try {
-            const orderData = {
-                total_amount: totalAmount,
-                shipping_address: shippingInfo.address,
-                customer_phone: shippingInfo.phone,
-                payment_method: shippingInfo.paymentMethod || 'standard_checkout',
-                cart_items: cartItems
-            };
-
-            const result = await this.createOrder(orderData);
-            
-            if (result.success) {
-                // Clear cart after successful order
-                this.clearCart();
-                
-                // Redirect to order confirmation
-                setTimeout(() => {
-                    window.location.href = `order-confirmation.html?orderId=${result.orderId}`;
-                }, 1500);
+    setupEventListeners() {
+        // Use event delegation for logout buttons to avoid conflicts
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.logout-btn')) {
+                e.preventDefault();
+                this.handleLogout();
             }
+        });
+
+        // Use event delegation for orders buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.view-orders-btn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🎯 Orders button clicked, opening modal...');
+                this.openOrdersModal();
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.user-menu-container')) {
+                this.closeAllDropdowns();
+            }
+        });
+
+        const mobileUsername = document.getElementById('mobile-username-text');
+        if (mobileUsername) {
+            mobileUsername.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMobileDropdown();
+            });
+        }
+    }
+
+    // 🆕 FIXED: Global event handlers - only handle specific order links
+    setupGlobalEventHandlers() {
+        // Use event delegation to only handle specific order links
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('a');
             
-            return result;
-        } catch (error) {
-            console.error('Checkout process failed:', error);
-            throw error;
-        }
+            if (!target) return;
+            
+            const href = target.getAttribute('href');
+            const classList = target.classList;
+            
+            // Only handle specific order-related links, not all links
+            if (href && (
+                href.includes('/api/orders') ||
+                classList.contains('dropdown-item') && target.textContent.toLowerCase().includes('order')
+            )) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔗 Intercepted orders link, opening modal instead');
+                this.openOrdersModal();
+            }
+        });
     }
 
-    // Clear cart after successful order
-    clearCart() {
-        // Implement cart clearing logic based on your cart system
-        if (typeof window.clearCart === 'function') {
-            window.clearCart();
-        }
-        localStorage.removeItem('cartItems');
-    }
-
+    // ... rest of your existing methods (showAuthenticatedUI, showGuestUI, handleLogout, etc.)
     showAuthenticatedUI(userName) {
         this.toggleUserElements(true, userName);
-        
-        // Load user orders when UI updates
-        setTimeout(() => this.loadUserOrders(), 500);
     }
 
     showGuestUI() {
         this.toggleUserElements(false, 'Guest');
-        
-        // Clear orders display for guests
-        const ordersContainer = document.getElementById('user-orders-container');
-        if (ordersContainer) {
-            ordersContainer.innerHTML = '<p>Please log in to view your orders.</p>';
-        }
     }
 
     toggleUserElements(isAuthenticated, userName) {
-        // Desktop elements
+        // Your existing implementation
         const userMenu = document.getElementById('user-menu-container');
         const loginBtn = document.getElementById('login-btn');
         const usernameText = document.getElementById('username-text');
         
-        // Mobile elements
         const mobileUserMenu = document.getElementById('mobile-user-menu');
         const mobileLoginBtn = document.getElementById('mobile-login-btn');
         const mobileUsernameText = document.getElementById('mobile-username-text');
@@ -601,43 +1852,11 @@ class AuthManager {
         }
     }
 
-    setupEventListeners() {
-        document.querySelectorAll('.logout-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleLogout();
-            });
-        });
-
-        // View orders button
-        document.querySelectorAll('.view-orders-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.loadUserOrders();
-                // Navigate to orders page or show orders section
-                window.location.href = '/api/orders';
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.user-menu-container')) {
-                this.closeAllDropdowns();
-            }
-        });
-
-        const mobileUsername = document.getElementById('mobile-username-text');
-        if (mobileUsername) {
-            mobileUsername.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleMobileDropdown();
-            });
-        }
-    }
-
     handleLogout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
         this.currentUser = null;
+        this.userOrders = [];
         
         console.log('✅ User logged out');
         
@@ -648,7 +1867,7 @@ class AuthManager {
         if (!this.isOnHomePage()) {
             setTimeout(() => {
                 window.location.href = 'index.html';
-            }, 10000);
+            }, 1000);
         }
     }
 
@@ -663,6 +1882,13 @@ class AuthManager {
     closeAllDropdowns() {
         document.querySelectorAll('.user-dropdown').forEach(dropdown => {
             dropdown.style.display = 'none';
+        });
+        
+        // Also close any open modals
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (modal.id === 'orders-modal' || modal.id === 'order-details-modal') {
+                modal.style.display = 'none';
+            }
         });
     }
 
@@ -691,5 +1917,7 @@ class AuthManager {
 const authManager = new AuthManager();
 
 // Global functions for easy access from HTML
-window.viewOrder = (orderId) => authManager.viewOrder(orderId);
-window.loadUserOrders = () => authManager.loadUserOrders();
+window.viewOrder = (orderId) => authManager.viewOrderDetails(orderId);
+window.loadUserOrders = () => authManager.getUserOrders();
+window.openOrdersModal = () => authManager.openOrdersModal();
+window.showOrdersModal = () => authManager.showOrdersModal();

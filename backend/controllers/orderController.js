@@ -64,16 +64,36 @@ const orderController = {
 
 
   // Get user's orders
+  // getUserOrders: asyncHandler(async (req, res) => {
+  //   const userId = req.user.id;
+    
+  //   const orders = await Order.findByUserId(userId);
+    
+  //   res.json({
+  //     success: true,
+  //     data: orders
+  //   });
+  // }),
+
+
   getUserOrders: asyncHandler(async (req, res) => {
-    const userId = req.user.id;
-    
-    const orders = await Order.findByUserId(userId);
-    
-    res.json({
-      success: true,
-      data: orders
-    });
-  }),
+  const userId = req.user.id;
+
+  // Get all orders for the user
+  const orders = await Order.findByUserId(userId);
+
+  // Attach items to each order
+  for (let order of orders) {
+    const items = await OrderItem.findByOrderId(order.id);
+    order.items = items; // 🔥 Add items array
+  }
+
+  res.json({
+    success: true,
+    data: orders
+  });
+}),
+
 
   // Create order
   createOrder: asyncHandler(async (req, res) => {

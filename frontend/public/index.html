@@ -57,10 +57,15 @@
                 <span class="dropdown-icon">👤</span>
                 User Profile
             </a>
-            <a href="/api/orders/:id" class="dropdown-item">
+            <!-- <a href="/api/orders/" class="dropdown-item">
                 <span class="dropdown-icon">📦</span>
                 My Orders
-            </a>
+            </a> -->
+
+           <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
+    <span class="dropdown-icon">📦</span>
+    My Orders
+</a>
             <a href="/api/pswd" class="dropdown-item">
                 <span class="dropdown-icon">🔒</span>
                 Change Password
@@ -88,7 +93,7 @@
             </button>
         </div>
 
-        <div class="cart-icon" onclick="showCart()">
+        <div class="cart-icon" onclick="app.showCart()">
             🛒
             <span id="cart-count">0</span>
         </div>
@@ -111,11 +116,11 @@
     <div class="mobile-user-menu" id="mobile-user-menu" style="display: none;">
         <span id="mobile-username-text">Guest</span>
         <div class="user-dropdown">
-            <a href="/api/users/profile" class="dropdown-item" onclick="closeMobileMenu()">
+            <a href="/profile" class="dropdown-item" onclick="closeMobileMenu()">
                 <span class="dropdown-icon">👤</span>
                 User Profile
             </a>
-            <a href="/api/orders" class="dropdown-item" onclick="closeMobileMenu()">
+            <a href="/orders" class="dropdown-item" onclick="closeMobileMenu()">
                 <span class="dropdown-icon">📦</span>
                 My Orders
             </a>
@@ -259,8 +264,8 @@
     <script src="./assets/js/look.js"></script>
     <script src="./assets/js/carousel.js"></script>
     <script src="./assets/js/humberger.js"></script>
-    <script src="./assets/js/user-script.js"></script>
-    <script src="./assets/js/usr.js"></script>
+     <script src="./assets/js/user-script.js"></script>
+  <script src="./assets/js/usr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

@@ -173,6 +173,7 @@
                 // document.getElementById('totalOrders').textContent = ordersCount;
                 
                 // Calculate pending orders
+                const orders = await apiCall('/api/orders');
                 const pendingOrdersCount = Array.isArray(orders) ? 
                     orders.filter(order => order.status === 'pending').length : 0;
                 document.getElementById('pendingOrders').textContent = pendingOrdersCount;
@@ -258,7 +259,7 @@
 
 async function loadOrders() {
     try {
-        const token = localStorage.getItem('adminToken');
+        const token = localStorage.getItem('adminToken') || ('authToken');
         const response = await fetch('http://localhost:3000/api/orders', {
             headers: {
                 'Authorization': `Bearer ${token}`,
