@@ -57,10 +57,6 @@
                 <span class="dropdown-icon">👤</span>
                 User Profile
             </a>
-            <!-- <a href="/api/orders/" class="dropdown-item">
-                <span class="dropdown-icon">📦</span>
-                My Orders
-            </a> -->
 
            <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
     <span class="dropdown-icon">📦</span>
@@ -225,6 +221,17 @@
             <div id="modal-content"></div>
         </div>
     </div>
+
+       <section class="products-section">
+            <div class="container">
+                <h2 id="section-title">New Arrivals</h2>
+                <div class="products-grid" id="products-grid" >
+                    <!-- Products will be loaded here -->
+                </div>
+                <div id="loading" class="loading">Loading New Arrival products...</div>
+                <div id="error-message" class="error-message" style="display: none;"></div>
+            </div>
+        </section>
 
     <!-- Checkout Confirmation Modal -->
 <div id="checkoutModal" class="modal">

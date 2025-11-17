@@ -1247,7 +1247,7 @@ button:focus-visible,
     padding: 6px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    margin-left: 5px;
+    margin: 0 20px;
 }
 #section-title{
     font-size: 2rem;

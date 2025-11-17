@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const userAdminRoutes = require('./routes/userAdminRoutes');
-console.log('🔧 Starting server initialization...');
+// console.log('🔧 Starting server initialization...');
 
 const app = express();
 
@@ -16,16 +16,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 app.use('/api', userAdminRoutes);
-console.log(' Loading database module...');
+// console.log(' Loading database module...');
 
 // Import database with error handling
 let database;
 try {
     database = require('./config/database');
-    console.log('✅ Database module loaded successfully');
-    console.log('📋 Available exports:', Object.keys(database));
+    // console.log('✅ Database module loaded successfully');
+    // console.log('📋 Available exports:', Object.keys(database));
 } catch (error) {
-    console.error('❌ Failed to load database module:', error.message);
+    // console.error('❌ Failed to load database module:', error.message);
     process.exit(1);
 }
 
@@ -39,18 +39,18 @@ app.get('/api/test', (req, res) => {
 });
 
 // Import routes with individual error handling
-console.log('📦 Loading routes...');
+// console.log('📦 Loading routes...');
 
 // Load each route individually to identify which one fails
 const loadRoute = (name, path, endpoint) => {
     try {
-        console.log(`   Loading ${name}...`);
+        // console.log(`   Loading ${name}...`);
         const route = require(path);
         app.use(endpoint, route);
-        console.log(`   ✅ ${name} loaded successfully`);
+        // console.log(`   ✅ ${name} loaded successfully`);
         return true;
     } catch (error) {
-        console.log(`   ❌ ${name} failed: ${error.message}`);
+        // console.log(`   ❌ ${name} failed: ${error.message}`);
         return false;
     }
 };
@@ -73,95 +73,7 @@ routes.forEach(route => {
     }
 });
 
-console.log(`🎯 Routes loaded: ${loadedCount}/${routes.length} successful`);
-
-// Add temporary fallback routes to ensure admin dashboard works
-// console.log('🔄 Adding temporary fallback routes...');
-
-// Temporary users route (in case userRoutes failed)
-// app.get('/api/users', (req, res) => {
-//     console.log('✅ TEMPORARY /api/users called');
-//     const users = [
-//         { 
-//             id: 1, 
-//             username: 'john_doe', 
-//             email: 'john@example.com',
-//             role: 'user',
-//             created_at: '2024-01-15T10:00:00.000Z'
-//         },
-//         { 
-//             id: 2, 
-//             username: 'jane_smith', 
-//             email: 'jane@example.com',
-//             role: 'user',
-//             created_at: '2024-01-20T10:00:00.000Z'
-//         }
-//     ];
-//     res.json(users);
-// });
-
-// // Temporary admins route
-// app.get('/api/users/admins', (req, res) => {
-//     console.log('✅ TEMPORARY /api/users/admins called');
-//     const admins = [
-//         { 
-//             id: 1, 
-//             username: 'admin', 
-//             email: 'admin@example.com',
-//             role: 'super_admin',
-//             created_at: '2024-01-01T10:00:00.000Z'
-//         }
-//     ];
-//     res.json(admins);
-// });
-
-// // Temporary products route
-// app.get('/api/products', (req, res) => {
-//     console.log('✅ TEMPORARY /api/products called');
-//     const products = [
-//         {
-//             id: 1,
-//             name: 'Smartphone',
-//             price: 29999.99,
-//             stock: 50,
-//             category: 'phones'
-//         },
-//         {
-//             id: 2,
-//             name: 'Laptop',
-//             price: 89999.99,
-//             stock: 25,
-//             category: 'electronics'
-//         }
-//     ];
-//     res.json(products);
-// });
-
-// // Temporary orders route
-// app.get('/api/orders', (req, res) => {
-//     console.log('✅ TEMPORARY /api/orders called');
-//     const orders = [
-//         { 
-//             id: 1, 
-//             username: 'john_doe', 
-//             email: 'john@example.com',
-//             total_amount: 29999.99,
-//             status: 'pending',
-//             created_at: '2024-03-01T10:00:00.000Z'
-//         },
-//         { 
-//             id: 2, 
-//             username: 'jane_smith', 
-//             email: 'jane@example.com',
-//             total_amount: 12999.50,
-//             status: 'confirmed',
-//             created_at: '2024-03-02T10:00:00.000Z'
-//         }
-//     ];
-//     res.json(orders);
-// });
-
-// console.log('✅ Temporary routes added');
+// console.log(`🎯 Routes loaded: ${loadedCount}/${routes.length} successful`);
 
 // Serve pages (only one definition for each)
 app.get('/admin', (req, res) => {
@@ -215,7 +127,7 @@ app.get('/api/health', async (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-    console.error('❌ Server Error:', error);
+    // console.error('❌ Server Error:', error);
     res.status(500).json({ 
         error: 'Internal server error',
         message: error.message
@@ -230,56 +142,12 @@ app.use((req, res) => {
         available: ['/api/test', '/api/health', '/api/products', '/api/users', '/api/orders']
     });
 });
-//user login display function
-// Add JWT verification middleware
-// const authenticateToken = (req, res, next) => {
-//     const authHeader = req.headers['authorization'];
-//     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
-//     if (!token) {
-//         return res.status(401).json({ error: 'Access token required' });
-//     }
-
-//     jwt.verify(token, SECRET, (err, user) => {
-//         if (err) {
-//             return res.status(403).json({ error: 'Invalid or expired token' });
-//         }
-//         req.user = user;
-//         next();
-//     });
-// };
-
-// Updated /api/users endpoint
-// app.get('/api/users', authenticateToken, async (req, res) => {
-//     try {
-//         // req.user contains the decoded JWT payload
-        
-//         const [rows] = await db.pool.query(
-//     'SELECT id, email, username, role FROM users WHERE id = ?', 
-//     [req.user.id]
-// );
-
-        
-//         if (rows.length === 0) {
-//             return res.status(404).json({ error: 'User not found' });
-//         }
-
-//         const user = rows[0];
-//         res.json({
-//             email: user.email,
-//             name: user.username // This will show "Steven villier"
-//         });
-        
-//     } catch (error) {
-//         console.error('User fetch error:', error);
-//         res.status(500).json({ error: 'Server error' });
-//     }
-// });
 
 // Start server function
 const startServer = async () => {
     try {
-        console.log('🔄 Testing database connection...');
+        // console.log('🔄 Testing database connection...');
         
         // Verify testConnection exists and is a function
         if (!database.testConnection || typeof database.testConnection !== 'function') {
@@ -292,23 +160,23 @@ const startServer = async () => {
             throw new Error('Database connection failed. Please check your MySQL server and credentials.');
         }
         
-        console.log('✅ Database connection verified');
+        // console.log('✅ Database connection verified');
         
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`\n🚀 Server running on port ${PORT}`);
-            console.log(`🔗 Test API: http://localhost:${PORT}/api/test`);
-            console.log(`🔗 Products: http://localhost:${PORT}/api/products`);
-            console.log(`🔗 Users: http://localhost:${PORT}/api/users`);
-            console.log(`🔗 Orders: http://localhost:${PORT}/api/orders`);
-            console.log(`🔗 Admins: http://localhost:${PORT}/api/users/admins`);
-            console.log(`🔗 Admin Login: http://localhost:${PORT}/admin-login`);
-            console.log(`🔗 Admin Dashboard: http://localhost:${PORT}/admin`);
-            console.log(`❤️  Health Check: http://localhost:${PORT}/api/health`);
+            // console.log(`🔗 Test API: http://localhost:${PORT}/api/test`);
+            // console.log(`🔗 Products: http://localhost:${PORT}/api/products`);
+            // console.log(`🔗 Users: http://localhost:${PORT}/api/users`);
+            // console.log(`🔗 Orders: http://localhost:${PORT}/api/orders`);
+            // console.log(`🔗 Admins: http://localhost:${PORT}/api/users/admins`);
+            // console.log(`🔗 Admin Login: http://localhost:${PORT}/admin-login`);
+            // console.log(`🔗 Admin Dashboard: http://localhost:${PORT}/admin`);
+            // console.log(`❤️  Health Check: http://localhost:${PORT}/api/health`);
         });
         
     } catch (error) {
-        console.error('❌ Server startup failed:', error.message);
+        // console.error('❌ Server startup failed:', error.message);
         process.exit(1);
     }
 };
