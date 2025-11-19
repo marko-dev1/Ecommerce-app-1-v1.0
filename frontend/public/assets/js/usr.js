@@ -214,9 +214,9 @@ class AuthManager {
                                 <span class="order-total">Ksh ${parseFloat(order.total_amount).toFixed(2)}</span>
                                 <span class="order-items">${totalQuantity} ${totalQuantity === 1 ? 'item' : 'items'}</span>
                             </div>
-                            <button class="btn-view-order-details" data-order-id="${order.id}">
-                                View Details
-                            </button>
+                            <!--<button class="btn-view-order-details" data-order-id="${order.id}">
+                                Close
+                            </button>-->
                         </div>
                     </div>`;
                 }).join('')}
@@ -875,36 +875,45 @@ class AuthManager {
 
     showGuestUI() {
         this.toggleUserElements(false, 'Guest');
-    }
+       }
 
     toggleUserElements(isAuthenticated, userName) {
-        // Your existing implementation
-        const userMenu = document.getElementById('user-menu-container');
-        const loginBtn = document.getElementById('login-btn');
-        const usernameText = document.getElementById('username-text');
-        
-        const mobileUserMenu = document.getElementById('mobile-user-menu');
-        const mobileLoginBtn = document.getElementById('mobile-login-btn');
-        const mobileUsernameText = document.getElementById('mobile-username-text');
+    const userMenu = document.getElementById('user-menu-container');
+    const loginBtn = document.getElementById('login-btn');
+    const usernameText = document.getElementById('username-text');
 
-        if (isAuthenticated) {
-            if (userMenu) userMenu.style.display = 'block';
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (usernameText) usernameText.textContent = userName;
-            
-            if (mobileUserMenu) mobileUserMenu.style.display = 'block';
-            if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
-            if (mobileUsernameText) mobileUsernameText.textContent = userName;
-        } else {
-            if (userMenu) userMenu.style.display = 'none';
-            if (loginBtn) loginBtn.style.display = 'flex';
-            if (usernameText) usernameText.textContent = 'Guest';
-            
-            if (mobileUserMenu) mobileUserMenu.style.display = 'none';
-            if (mobileLoginBtn) mobileLoginBtn.style.display = 'inline-block';
-            if (mobileUsernameText) mobileUsernameText.textContent = 'Guest';
-        }
+    const mobileUserMenu = document.getElementById('mobile-user-menu');
+    const mobileLoginBtn = document.getElementById('mobile-login-btn');
+    const mobileUsernameText = document.getElementById('mobile-username-text');
+
+    if (isAuthenticated) {
+        // Show user dropdown
+        if (userMenu) userMenu.style.display = 'block';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (usernameText) usernameText.style.display = 'inline-block';
+        if (usernameText) usernameText.textContent = userName;
+
+        if (mobileUserMenu) mobileUserMenu.style.display = 'block';
+        if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
+        if (mobileUsernameText) mobileUsernameText.style.display = 'inline-block';
+        if (mobileUsernameText) mobileUsernameText.textContent = userName;
+
+    } else {
+        // HIDE the entire user menu section
+        if (userMenu) userMenu.style.display = 'none';
+
+        // Show only Login button
+        if (loginBtn) loginBtn.style.display = 'flex';
+
+        // Completely hide "Guest"
+        if (usernameText) usernameText.style.display = 'none';
+
+        if (mobileUserMenu) mobileUserMenu.style.display = 'none';
+        if (mobileLoginBtn) mobileLoginBtn.style.display = 'inline-block';
+        if (mobileUsernameText) mobileUsernameText.style.display = 'none';
     }
+}
+
 
     handleLogout() {
         localStorage.removeItem('authToken');

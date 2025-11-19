@@ -36,7 +36,7 @@ body {
 /* Header & Navigation */
 header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    background-color: var(--second);
+    background-color: var(--white);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
@@ -46,10 +46,10 @@ header {
 
 .navbar {
     display: flex;
-    height: 10vh;
+    height: 15vh;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1rem;
     position: relative;
 }
 
@@ -60,12 +60,17 @@ header {
 }
 
 .logo {
-    color: var(--white);
-    font-size: 2rem;
-    font-weight: 700;
+    color: var(--second);
+    font-size: 2.2rem;
+    font-weight: 500;
     margin-right: 3rem;
     text-decoration: none;
     transition: var(--transition);
+}
+
+.logo a {
+    color: var(--success);
+    text-decoration: none;
 }
 
 .logo:hover {
@@ -79,9 +84,9 @@ header {
 }
 
 .nav-link {
-    color: var(--white);
+    color: var(--text-light);
     text-decoration: none;
-    padding: o.5rem;
+    /* padding: o.5rem; */
     border-radius: 6px;
     transition: var(--transition);
     font-weight: 500;
@@ -90,17 +95,17 @@ header {
 
 
 .nav-links a{
-    color: var(--white);
+    color: var(--text-light);
     text-decoration: none;
-    padding: 0.5rem;
+    padding: 2px 6px;
     border-radius: 6px;
     transition: var(--transition);
-    font-weight: 500;
+    font-weight: 700;
     position: relative;
 }
 
 .nav-links a:hover {
-    color: var(--background);
+    color: var(--text-light);
     /* background: rgba(255, 255, 255, 0.1); */
     transform: translateY(-2px);
 }
@@ -121,37 +126,6 @@ header {
     width: 80%;
 }
 
-.admin-links {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-left: auto;
-    margin-right: 2rem;
-}
-
-.admin-link {
-    color: var(--white);
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    transition: var(--transition);
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.admin-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
-}
-
-.user-greeting {
-    color: var(--white);
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem;
-}
 
 /* Cart Icon */
 .cart-icon {
@@ -210,7 +184,7 @@ header {
 .hamburger-line {
     width: 25px;
     height: 3px;
-    background: var(--white);
+    background: var(--text-dark);
     margin: 3px 0;
     transition: 0.3s;
     border-radius: 2px;
@@ -238,11 +212,7 @@ header {
     max-width: 340px;
     height: 100vh;
     height: 100dvh;
-    background: linear-gradient(135deg, 
-        goldenrod 0%, 
-        #daa520 25%, 
-        #b8860b 75%, 
-        #996515 100%);
+    background: #ebe9e6 ;
     z-index: 2000;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     padding: 2rem 1.5rem;
@@ -270,12 +240,12 @@ header {
 
 /* Enhanced close button with golden theme */
 .mobile-close {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    position: relative;
+    /* top: 1.2rem; */
+    left: 1.2rem;
+    background: white;
     border: 1.5px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
+    color: #f00909;
     font-size: 1.6rem;
     cursor: pointer;
     padding: 0;
@@ -331,7 +301,7 @@ header {
 }
 
 .mobile-nav-link {
-    color: #fff;
+    color: #121111;
     text-decoration: none;
     padding: 1.2rem 1.5rem;
     border-radius: 16px;
@@ -387,7 +357,7 @@ header {
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     outline: none;
-    color: #fff8e1;
+    color: #0a0a09;
 }
 
 .mobile-nav-link:hover::before,
@@ -654,8 +624,8 @@ main {
     background: var(--shadow);
     border-radius:5px;
     overflow: hidden;
-    height: 300px;
-    /* box-shadow: var(--shadow); */
+    height: 310px;
+   padding: 5px;
     transition: var(--transition);
     cursor: pointer;
     position: relative;
@@ -711,7 +681,7 @@ height: 50px;
 .product-description {
     color: var(--text-light);
     font-size: 1rem;
-    margin-bottom: 0.3rem;
+    /* margin-bottom: 0.3rem; */
       white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -764,12 +734,17 @@ height: 50px;
     /* transition: transform 0.2s ease, background 0.3s ease; */
 }
 
-.add-to-cart-info {
+/* .add-to-cart-info {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin-right: 10px;
     padding: 0.5rem 0;
+} */
+
+.add-to-cart-info {
+    margin-top: auto;   /* forces it to the bottom of the card */
+    padding-top: 10px;
 }
 
 .add-to-cart-btn:hover {
@@ -1029,7 +1004,7 @@ button:focus-visible,
     
     .product-price {
         font-size: 0.8rem;
-        margin-bottom: 0.2rem;
+        /* margin-bottom: 0.2rem; */
     }
     
     .product-description {
@@ -1330,36 +1305,38 @@ button:focus-visible,
   }
 
   #search-bar {
-    width: 100%;
+    width: 70%;
   }
-
   .login-btn {
-    width: 100%;
+    width: 60%;
     text-align: center;
+   
   }
 }
 
 /* user css */
 
 #username-text {
-    color: white;
+    color: var(--white);
     cursor: pointer;
     font-weight: bold;
     padding: 6px 10px;
+    border-radius: 50px;
+    /* background-color: #0056b3; */
 }
 
-.login-btn, .logout-btn {
-    padding: 8px 16px;
+/* .login-btn, .logout-btn {
+    padding: 8px ;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 10px;
-}
+    margin-left: 10px; 
+} */
 
-.login-btn {
+/* .login-btn {
     background-color: #007bff;
     color: white;
-}
+} */
 
 
 
@@ -1367,9 +1344,9 @@ button:focus-visible,
     background-color: #0056b3;
 }
 
-.logout-btn:hover {
+/* .logout-btn:hover {
     background-color: #c82333;
-}
+} */
 /* 
 /* User Menu Styles */
 .user-menu-container {
@@ -1383,18 +1360,12 @@ button:focus-visible,
     align-items: center;
     gap: 2px; 
 }
-.username-hover {
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
-    color: #333;
-}
 
-.username-hover:hover {
+
+/* .username-hover:hover {
     background-color: #297aca;
-}
+    border-radius: 50px;
+} */
 
 .user-dropdown {
     position: absolute;
@@ -1411,12 +1382,14 @@ button:focus-visible,
     transition: all 0.3s ease;
     z-index: 1000;
 }
-
-.user-menu-container:hover .user-dropdown {
+.user-dropdown a{
+    color: white;
+}
+/* .user-menu-container:hover .user-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-}
+} */
 
 .dropdown-item {
     display: flex;
@@ -1432,18 +1405,18 @@ button:focus-visible,
     transition: background-color 0.2s ease;
     font-size: 14px;
 }
-.dropdown-item.logout-btn {
+/* .dropdown-item.logout-btn {
     color: #f0e9ea;
     font-weight: 600;
     margin: 10px;
-}
-.dropdown-item.logout-btn:hover {
+} */
+/* .dropdown-item.logout-btn:hover {
     color: #f0e9ea;
     font-weight: 600;
     transform: translate(12);
     
 
-}
+} */
 
 .dropdown-item:hover {
     background-color: #1c6fc3;
@@ -1483,7 +1456,8 @@ button:focus-visible,
 }
 
 #mobile-username-text, #username-text{
-    color:white
+    color: var(--second);
+    font-size: 15px;
 } 
 
 
@@ -1536,14 +1510,14 @@ button:focus-visible,
 }
 
 .product-price {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
-    color: #2c5aa0;
-    margin: 10px 0;
+    color: #ea2323;
+    /* margin: 10px 0; */
 }
 
 .product-quantity, .product-description {
-    margin: 10px 0;
+    /* margin: 10px 0; */
     color: #666;
 }
 

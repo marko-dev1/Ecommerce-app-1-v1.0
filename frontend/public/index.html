@@ -6,6 +6,12 @@
     <title>Vitronics Store</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/carousel.css">
+     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -13,11 +19,11 @@
  <header>
     <nav class="navbar">
         <div class="nav-container">
-            <h1 class="logo">Vitronics Store</h1>
+            <h1 class="logo"><a href="index.html">Vitronics Store</a></h1>
             
             <!-- Desktop Navigation -->
             <div class="nav-links">
-                <a href="#" class="nav-link" onclick="showAllProducts()">All Products</a>
+                <a href="#" class="nav-link" onclick="showAllProducts()">All Categories</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('electronics')">Electronics</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('phones')">Phones</a>
                 <a href="#" class="nav-link" onclick="filterByCategory('phones accessories')">Phone Accessories</a>
@@ -28,20 +34,9 @@
 
 
 <div class="user-section">
-<<<<<<< HEAD
     <div class="user-menu-container" id="user-menu-container" style="display: none;">
-        <span id="username-text" class="username-hover">Guest</span>
-        <div class="user-dropdown">
-            <a href="/api/users/profile" class="dropdown-item">
-                <span class="dropdown-icon">👤</span>
-                User Profile
-            </a>
-=======
-    <!-- <div class="user-menu-container" id="user-menu-container" style="display: none;"> -->
-        <div class="user-menu-container" id="user-menu-container">
->>>>>>> b55185b106f36051af76d3ca746d00fc4469bab6
 
-        <span id="username-text" class="username-hover">Guest ▼</span>
+        <span id="username-text" class="username-hover">Guest</span>
 
         <div class="user-dropdown" id="user-dropdown">
             <a href="/api/users/profile" class="dropdown-item">
@@ -55,8 +50,6 @@
             <a href="/api/pswd" class="dropdown-item">
                 <span class="dropdown-icon">🔒</span> Change Password
             </a>
-          
-
             <!-- <div class="dropdown-divider"></div> -->
 
             <button class="dropdown-item logout-btn" id="logout-btn">
@@ -116,7 +109,7 @@
                 <span class="dropdown-icon">🔒</span>
                 Change Password
             </a>
-            <div class="dropdown-divider"></div>
+            <!-- <div class="dropdown-divider"></div> -->
            
             <button class="dropdown-item logout-btn" onclick="closeMobileMenu()">
                 <span class="dropdown-icon">🚪</span>
@@ -214,18 +207,18 @@
             <div id="modal-content"></div>
         </div>
     </div>
-
-       <section class="products-section">
+<!-- ---------------------------------------for new arrivals section-------------------------------- -->
+       <!-- <section class="products-section">
             <div class="container">
                 <h2 id="section-title">New Arrivals</h2>
-                <div class="products-grid" id="products-grid" >
+                <div class="products-grid" id="products-grid" > -->
                     <!-- Products will be loaded here -->
-                </div>
+                <!-- </div>
                 <div id="loading" class="loading">Loading New Arrival products...</div>
                 <div id="error-message" class="error-message" style="display: none;"></div>
             </div>
-        </section>
-
+        </section> -->
+<!-- -------------------------------------------------------------------------------------------- -->
     <!-- Checkout Confirmation Modal -->
 <div id="checkoutModal" class="modal">
   <div class="modal-content">

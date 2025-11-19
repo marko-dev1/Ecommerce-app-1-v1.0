@@ -34,7 +34,7 @@ app.get('/api/test', (req, res) => {
     res.json({ 
         message: 'Server is working! 🚀', 
         timestamp: new Date().toISOString(),
-        endpoints: ['/api/products', '/api/users', '/api/orders', '/api/admin']
+        endpoints: ['/api/products', '/api/users', '/api/orders', '/api/admin', '/api/profile' ]
     });
 });
 

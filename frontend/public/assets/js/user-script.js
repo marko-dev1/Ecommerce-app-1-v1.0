@@ -201,7 +201,7 @@ async function loadProfile() {
         const data = await response.json();
 
         if (response.ok) {
-            console.log('✅ Logged-in user:', data.user); // 👈 Log the user info
+            console.log('✅ Logged-in user:', data.user); 
 
             const profileInfo = document.getElementById('profile-info');
             profileInfo.innerHTML = `
