@@ -76,11 +76,26 @@ class UserController {
       res.status(500).json({ error: error.message });
     }
   }
-// Fetch users
- static async getAllUsers(req, res) {
-  try {
-    const [users] = await db.pool.query(`
-      SELECT id, username, email, phone_number, role, created_at
+  // deletw user
+  static async deleteUser(req, res) {
+    try {
+      const { userId } = req.params;
+      const success = await UserService.deleteUser(userId);
+      if (success) {
+        res.json({ message: 'User deleted successfully' });
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // Fetch users
+  static async getAllUsers(req, res) {
+    try {
+      const [users] = await db.pool.query(`
+          SELECT id, username, email, phone_number, role, created_at
       FROM users
       ORDER BY created_at DESC
     `);

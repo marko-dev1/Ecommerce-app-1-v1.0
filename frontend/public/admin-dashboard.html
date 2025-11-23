@@ -33,7 +33,7 @@
                 <h1>Dashboard Overview</h1>
                 <div class="stats-grid">
                     <div class="stat-card-1">
-                        <h3>Total Products</h3>
+                       <h3><a href="/api/products/"></a> Total products</h3> 
                         <div class="stat-number" id="totalProducts">0</div>
                     </div>
                     <div class="stat-card-2">
@@ -59,6 +59,7 @@
             <div id="products" class="content-section">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h1>Product Management</h1>
+                    <input type="text" id="search-bar" placeholder="Search products..." onkeyup="searchProducts(this.value)" />
                     <button class="btn btn-primary" onclick="showAddProductModal()">Add Product</button>
                 </div>
                 <div id="productsTable">
@@ -83,6 +84,7 @@
             <!-- Users Management Section -->
             <div id="users" class="content-section">
                 <h1>User Management</h1>
+                <input type="text" id="search-bar" placeholder="Search Users..." onkeyup="searchProducts(this.value)" />
                 <div id="usersTable">
                     <table class="table">
                         <thead>
@@ -104,6 +106,7 @@
             <!-- Orders Section -->
             <div id="orders" class="content-section">
                 <h1>Order Management</h1>
+                <input type="text" id="search-bar" placeholder="Search Orders..." onkeyup="searchProducts(this.value)" />
                 <div id="ordersTable">
                     <table class="table">
                         <thead>

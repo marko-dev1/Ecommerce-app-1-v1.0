@@ -1262,7 +1262,8 @@ displayProducts(products) {
           
           <div class="product-info">
               <h3 class="product-name">${product.name}</h3>
-              <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>
+             <!-- <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>-->
+               <div class="product-price">Ksh ${Number(product.price).toLocaleString('en-KE', { minimumFractionDigits: 2 })}</div>
               <p class="product-description">
                 ${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}
               </p>
@@ -1313,7 +1314,7 @@ displayProducts(products) {
 // -------------------------------------------------------------------------------------------------------------------------------------------
 
 displayProductModal(product) {
-    console.log('🎯 Starting displayProductModal with product:', product);
+    // console.log('🎯 Starting displayProductModal with product:', product);
     
     const modal = document.getElementById('productModal');
     const modalContent = document.getElementById('modal-content');
@@ -1335,7 +1336,7 @@ displayProductModal(product) {
         imageUrl = '/uploads/default-product.jpg';
     }
 
-    console.log('🖼️ Final image URL to use:', imageUrl);
+    // console.log('🖼️ Final image URL to use:', imageUrl);
 
     // Create modal content
     modalContent.innerHTML = `
@@ -1355,9 +1356,10 @@ displayProductModal(product) {
             </div>
             <div class="product-info">
                 <h2>${product.name}</h2>
-                <div style="font-size: 1.2em; font-weight: bold; color: #2c5530; margin: 10px 0;">
+                <!--<div style="font-size: 1.2em; font-weight: bold; color: #2c5530; margin: 10px 0;">
                     Ksh ${parseFloat(product.price).toFixed(2)}
-                </div>
+                </div>-->
+                
                 <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}" 
                      style="display: inline-block; padding: 0.5rem 1rem; border-radius: 15px; font-weight: 500; margin: 10px 0;">
                     ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}

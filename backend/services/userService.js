@@ -36,6 +36,10 @@ class UserService {
   static async deleteAdmin(userId) {
     return await User.delete(userId);
   }
+
+   static async deleteUser(userId) {
+    return await User.delete(userId);
+  }
 }
 
 module.exports = UserService;

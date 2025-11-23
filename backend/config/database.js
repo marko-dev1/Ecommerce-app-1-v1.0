@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-console.log('🔧 Loading database configuration...');
+// console.log('🔧 Loading database configuration...');
 
 // Database configuration
 const dbConfig = {
@@ -15,17 +15,17 @@ const dbConfig = {
     queueLimit: 0
 };
 
-console.log('📋 Database config loaded');
+// console.log('📋 Database config loaded');
 
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
 
 // Test connection function
 const testConnection = async () => {
-    console.log('🔌 Testing database connection...');
+    // console.log('🔌 Testing database connection...');
     try {
         const connection = await pool.getConnection();
-        console.log('✅ Database connected successfully');
+        // console.log('✅ Database connected successfully');
         connection.release();
         return true;
     } catch (error) {
@@ -37,11 +37,11 @@ const testConnection = async () => {
 // Initialize database function
 const initializeDatabase = async () => {
     try {
-        console.log('🔄 Initializing database...');
+        // console.log('🔄 Initializing database...');
         await testConnection();
         await createTables();
         await createDefaultAdmin();
-        console.log('✅ Database initialized successfully');
+        // console.log('✅ Database initialized successfully');
     } catch (error) {
         console.error('❌ Database initialization failed:', error);
     }
@@ -52,7 +52,7 @@ const createTables = async () => {
     let connection;
     try {
         connection = await pool.getConnection();
-        console.log('🗂️ Creating tables...');
+        // console.log('🗂️ Creating tables...');
 
         // Users table
         await connection.execute(`
@@ -68,7 +68,7 @@ const createTables = async () => {
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
         `);
-        console.log('✅ Users table created');
+        // console.log('✅ Users table created');
 
         // Products table
         await connection.execute(`
@@ -84,7 +84,7 @@ const createTables = async () => {
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
         `);
-        console.log('✅ Products table created');
+        // console.log('✅ Products table created');
 
         // Orders table
         await connection.execute(`
@@ -101,7 +101,7 @@ const createTables = async () => {
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
                     )
         `);
-        console.log('✅ Orders table created');
+        // console.log('✅ Orders table created');
 
         // Order items table
         await connection.execute(`
@@ -117,7 +117,7 @@ const createTables = async () => {
                 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
             )
         `);
-        console.log('✅ Order items table created');
+        // console.log('✅ Order items table created');
 
     } catch (error) {
         console.error('❌ Error creating tables:', error);
@@ -148,12 +148,12 @@ const createDefaultAdmin = async () => {
                 ['superadmin', 'admin@ecommerce.com', hashedPassword, 'super_admin', 'Super Administrator']
             );
             
-            console.log('✅ Default super admin created:');
-            console.log('   Username: superadmin');
-            console.log('   Email: admin@ecommerce.com');
-            console.log('   Password: admin123');
+            // console.log('✅ Default super admin created:');
+            // console.log('   Username: superadmin');
+            // console.log('   Email: admin@ecommerce.com');
+            // console.log('   Password: admin123');
         } else {
-            console.log('✅ Super admin already exists');
+            // console.log('✅ Super admin already exists');
         }
 
     } catch (error) {
@@ -169,7 +169,7 @@ const createDefaultAdmin = async () => {
 // Initialize database (but don't block server startup)
 initializeDatabase().catch(console.error);
 
-console.log('✅ Database module setup complete');
+// console.log('✅ Database module setup complete');
 
 // Export everything
 module.exports = {

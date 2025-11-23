@@ -6,54 +6,51 @@ const UserController = require('../controllers/userController');
 const {auth,  superAdminAuth } = require('../middleware/auth');
 
 // ===============================
-// 🔐 AUTHENTICATION ROUTES
+// AUTHENTICATION ROUTES
 // ===============================
 
-// 👤 Normal User Login
+// Normal User Login
 router.post('/login', AuthController.login);
 
-// 🔐 Admin Login
+//  Admin Login
 router.post('/admin/login', AuthController.adminLogin);
 
-// 👤 Register Normal User
+//  Register Normal User
 router.post('/register', UserController.register);
 
-// 🙍‍♂️ Get Logged-in User Profile (any authenticated user)
+// Get Logged-in User Profile (any authenticated user)
 router.get('/profile', auth, AuthController.getProfile);
 
 
 // ===============================
-// 🧑‍💼 ADMIN MANAGEMENT (Super Admin only)
+//  ADMIN MANAGEMENT (Super Admin only)
 // ===============================
 
 // ➕ Create Admin
 router.post('/admins', auth, superAdminAuth, UserController.createAdmin);
 
-// 📜 Get All Admins
+// Get All Admins
 router.get('/admins', auth, superAdminAuth, UserController.getAllAdmins);
 
-// 🔄 Update Admin Role
+// Update Admin Role
 router.put('/admins/:userId/role', auth, superAdminAuth, UserController.updateUserRole);
 
-// ❌ Delete Admin
+// Delete Admin
 router.delete('/admins/:userId', auth, superAdminAuth, UserController.deleteAdmin);
 
 
 // ===============================
-// 👥 USER MANAGEMENT (Admin or Super Admin)
+// USER MANAGEMENT (Admin or Super Admin)
 // ===============================
 
-// 📋 Get All Users
+// Get All Users
 router.get('/users', auth, UserController.getAllUsers);
 
-// ✏️ Update User (Admin or Super Admin)
+// Update User (Admin or Super Admin)
 // router.put('/users/:userId', auth, adminAuth, UserController.updateUser);
+// Delete User (Admin or Super Admin)
+router.delete('/users/:userId', auth, UserController.deleteUser);
 
-
-// ===============================
-// 🧪 DEBUG ROUTE (optional)
-// ===============================
-router.post('/debug-hash', AuthController.debugUserCreation);
 
 
 module.exports = router;

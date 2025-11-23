@@ -14,10 +14,19 @@
                 return;
             }
             
+            // try {
+            //     const payload = JSON.parse(atob(token.split('.')[1]));
+            //     currentUser = payload;
+            //     document.getElementById('adminName').textContent = payload.username;
+
             try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                currentUser = payload;
-                document.getElementById('adminName').textContent = payload.username;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    currentUser = payload;
+
+    const adminName = payload.username || payload.name || payload.email || "Admin";
+    document.getElementById('adminName').textContent = adminName.split("@")[0];
+
+
                 
                 // Show admin management sections only for super admin
                 if (payload.role === 'super_admin') {
@@ -249,8 +258,8 @@
                     <td>${product.stock || 0}</td>
                     <td>${product.category || '-'}</td>
                     <td>
-                        <button class="btn btn-warning" onclick="editProduct(${product.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+                        <button class="btn btn-warning" style="background-color:orange; color: white;" onclick="editProduct(${product.id})">Edit</button>
+                        <button class="btn btn-danger" style="background-color:red; color: white;" onclick="deleteProduct(${product.id})">Delete</button>
                     </td>
                 </tr>
             `).join('');
@@ -383,7 +392,7 @@ document.addEventListener('DOMContentLoaded', loadOrders);
 
                     <td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}</td>
                     <td>
-                        <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                        <button class="btn btn-danger" style="background-color: red; color: white;" onclick="deleteUser(${user.id})">Delete</button>
                     </td>
                 </tr>
             `).join('');
@@ -428,7 +437,7 @@ document.addEventListener('DOMContentLoaded', loadOrders);
                     <td>${new Date(admin.created_at).toLocaleDateString()}</td>
                     <td>
                         ${admin.role !== 'super_admin' ? `
-                            <button class="btn btn-danger" onclick="deleteAdmin(${admin.id})">Delete</button>
+                            <button class="btn btn-danger" style="background-color: red; color: white;" onclick="deleteAdmin(${admin.id})">Delete</button>
                         ` : '<span style="color: #999;">Protected</span>'}
                     </td>
                 </tr>

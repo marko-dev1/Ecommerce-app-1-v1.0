@@ -1,12 +1,8 @@
-
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const userAdminRoutes = require('./routes/userAdminRoutes');
-// console.log('🔧 Starting server initialization...');
-
 const app = express();
 
 // Middleware
@@ -16,16 +12,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 app.use('/api', userAdminRoutes);
-// console.log(' Loading database module...');
 
 // Import database with error handling
 let database;
 try {
     database = require('./config/database');
-    // console.log('✅ Database module loaded successfully');
-    // console.log('📋 Available exports:', Object.keys(database));
 } catch (error) {
-    // console.error('❌ Failed to load database module:', error.message);
+  
     process.exit(1);
 }
 
@@ -38,19 +31,15 @@ app.get('/api/test', (req, res) => {
     });
 });
 
-// Import routes with individual error handling
-// console.log('📦 Loading routes...');
 
 // Load each route individually to identify which one fails
 const loadRoute = (name, path, endpoint) => {
     try {
-        // console.log(`   Loading ${name}...`);
         const route = require(path);
         app.use(endpoint, route);
-        // console.log(`   ✅ ${name} loaded successfully`);
+       
         return true;
     } catch (error) {
-        // console.log(`   ❌ ${name} failed: ${error.message}`);
         return false;
     }
 };
@@ -73,9 +62,7 @@ routes.forEach(route => {
     }
 });
 
-// console.log(`🎯 Routes loaded: ${loadedCount}/${routes.length} successful`);
-
-// Serve pages (only one definition for each)
+// Serve pages
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/public/admin-dashboard.html'));
 });
@@ -127,7 +114,6 @@ app.get('/api/health', async (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-    // console.error('❌ Server Error:', error);
     res.status(500).json({ 
         error: 'Internal server error',
         message: error.message
@@ -147,7 +133,6 @@ app.use((req, res) => {
 // Start server function
 const startServer = async () => {
     try {
-        // console.log('🔄 Testing database connection...');
         
         // Verify testConnection exists and is a function
         if (!database.testConnection || typeof database.testConnection !== 'function') {
@@ -160,23 +145,12 @@ const startServer = async () => {
             throw new Error('Database connection failed. Please check your MySQL server and credentials.');
         }
         
-        // console.log('✅ Database connection verified');
-        
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`\n🚀 Server running on port ${PORT}`);
-            // console.log(`🔗 Test API: http://localhost:${PORT}/api/test`);
-            // console.log(`🔗 Products: http://localhost:${PORT}/api/products`);
-            // console.log(`🔗 Users: http://localhost:${PORT}/api/users`);
-            // console.log(`🔗 Orders: http://localhost:${PORT}/api/orders`);
-            // console.log(`🔗 Admins: http://localhost:${PORT}/api/users/admins`);
-            // console.log(`🔗 Admin Login: http://localhost:${PORT}/admin-login`);
-            // console.log(`🔗 Admin Dashboard: http://localhost:${PORT}/admin`);
-            // console.log(`❤️  Health Check: http://localhost:${PORT}/api/health`);
         });
         
     } catch (error) {
-        // console.error('❌ Server startup failed:', error.message);
         process.exit(1);
     }
 };
