@@ -389,7 +389,7 @@ class ECommerceApp {
 
     try {
         const orderData = {
-            user_id: self.getCurrentUserId(), // Can be null for guest checkout
+            user_id: self.getCurrentUserId(), 
             total_amount: parseFloat(total),
             shipping_address: fullShippingAddress,
             payment_method: 'standard_checkout',
@@ -400,25 +400,12 @@ class ECommerceApp {
 
         console.log('🛒 Sending order data:', orderData);
 
-        // const response = await fetch('/api/orders/checkout', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(orderData)
-        // });
-
-        // console.log('📨 Response status:', response.status);
-
-        // const result = await response.json();
-        // console.log('📦 Response data:', result);
-
 
         const response = await fetch('/api/orders/checkout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}` // 🚨 ADD THIS LINE
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}` 
             },
             body: JSON.stringify(orderData)
         });
@@ -1233,6 +1220,57 @@ Thank you! 🛒
     }
 
 
+// displayProducts(products) {
+//   const grid = document.getElementById('products-grid');
+//   const loading = document.getElementById('loading');
+//   const error = document.getElementById('error-message');
+  
+//   loading.style.display = 'none';
+//   error.style.display = 'none';
+
+//   if (products.length === 0) {
+//     grid.innerHTML = '<p class="no-products" style="text-align: center; padding: 40px; color: #666; grid-column: 1 / -1;">No products found in this category.</p>';
+//     return;
+//   }
+
+//   grid.innerHTML = products.map(product => {
+//     const imageUrl = product.image_url || '/uploads/default-product.jpg';
+
+//     return `
+//       <!--  Added data-name for searching -->
+//       <div class="product-card" data-name="${product.name.toLowerCase()}">
+//           <div class="product-image-container" onclick="app.showProductDetail(${product.id})">
+//               <img src="${imageUrl}"  
+//                    alt="${product.name}" 
+//                    class="product-image"
+//                    onerror="this.onerror=null; this.src='/uploads/default-product.jpg'">
+//               ${product.stock <= 0 ? '<div class="out-of-stock-overlay">Out of Stock</div>' : ''}
+//           </div>
+          
+//           <div class="product-info">
+//               <h3 class="product-name">${product.name}</h3>
+//              <!-- <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>-->
+//                <div class="product-price">Ksh ${Number(product.price).toLocaleString('en-KE', { minimumFractionDigits: 2 })}</div>
+//               <p class="product-description">
+//                 ${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}
+//               </p>
+//               <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+//                   ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+//               </div>
+//           </div> 
+          
+//           <div class="add-to-cart-info">
+//               <button class="add-to-cart-btn" title="Add to cart"
+//                   onclick="app.addToCartFromButton(${product.id})"
+//                   ${product.stock <= 0 ? 'disabled' : ''}>
+//                   🛒
+//               </button>
+//           </div>
+//       </div>
+//     `;
+//   }).join('');
+// }
+
 displayProducts(products) {
   const grid = document.getElementById('products-grid');
   const loading = document.getElementById('loading');
@@ -1246,11 +1284,14 @@ displayProducts(products) {
     return;
   }
 
+  // 🔥 Generate watchers number between 8–75
+  const randomWatching = () => Math.floor(Math.random() * (75 - 8) + 8);
+
   grid.innerHTML = products.map(product => {
     const imageUrl = product.image_url || '/uploads/default-product.jpg';
+    const watchers = randomWatching(); // 👈 Generate for each product
 
     return `
-      <!-- ✅ Added data-name for searching -->
       <div class="product-card" data-name="${product.name.toLowerCase()}">
           <div class="product-image-container" onclick="app.showProductDetail(${product.id})">
               <img src="${imageUrl}"  
@@ -1262,11 +1303,14 @@ displayProducts(products) {
           
           <div class="product-info">
               <h3 class="product-name">${product.name}</h3>
-             <!-- <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>-->
-               <div class="product-price">Ksh ${Number(product.price).toLocaleString('en-KE', { minimumFractionDigits: 2 })}</div>
+              <div class="product-price">Ksh ${Number(product.price).toLocaleString('en-KE', { minimumFractionDigits: 2 })}</div>
+
+             
+
               <p class="product-description">
                 ${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}
               </p>
+
               <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
                   ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
               </div>
@@ -1278,11 +1322,14 @@ displayProducts(products) {
                   ${product.stock <= 0 ? 'disabled' : ''}>
                   🛒
               </button>
+           
+             <!-- <p class="watching-text">${watchers} people are viewing this product now</p>-->
           </div>
       </div>
     `;
   }).join('');
 }
+
 
     // Add to cart by product ID
     addToCartFromButton(productId) {

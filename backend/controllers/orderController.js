@@ -3,8 +3,8 @@ const Order = require('../models/order');
 const OrderItem = require('../models/orderItem');
 const asyncHandler = require('../middleware/asyncHandler');
 
+ // Get all orders (admin only)
 const orderController = {
-  // Get all orders (admin only)
   getAllOrders: asyncHandler(async (req, res) => {
     const orders = await Order.findAll();
     
@@ -63,19 +63,6 @@ const orderController = {
 }),
 
 
-  // Get user's orders
-  // getUserOrders: asyncHandler(async (req, res) => {
-  //   const userId = req.user.id;
-    
-  //   const orders = await Order.findByUserId(userId);
-    
-  //   res.json({
-  //     success: true,
-  //     data: orders
-  //   });
-  // }),
-
-
   getUserOrders: asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
@@ -85,7 +72,7 @@ const orderController = {
   // Attach items to each order
   for (let order of orders) {
     const items = await OrderItem.findByOrderId(order.id);
-    order.items = items; // 🔥 Add items array
+    order.items = items; // 
   }
 
   res.json({
@@ -191,3 +178,6 @@ updateOrderStatus: asyncHandler(async (req, res) => {
 };
 
 module.exports = orderController;
+
+
+

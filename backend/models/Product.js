@@ -36,10 +36,12 @@ class Product {
     }
 
     static async updateStock(id, stock) {
-        const query = 'UPDATE products SET stock = ? WHERE id = ?';
+        // const query = 'UPDATE products SET stock = ? WHERE id = ?';
+        const query = 'UPDATE products SET stock = stock + ? WHERE id = ?';
         const [result] = await pool.execute(query, [stock, id]);
         return result.affectedRows > 0;
     }
 }
 
 module.exports = Product;
+

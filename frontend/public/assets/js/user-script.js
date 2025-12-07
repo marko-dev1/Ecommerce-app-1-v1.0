@@ -164,7 +164,7 @@ async function handleLogin(response) {
     }
 
     // ✅ Save BOTH token and user data to localStorage
-    localStorage.setItem('authToken', token); // Note: using 'authToken' not 'token'
+    localStorage.setItem('authToken', token); 
     
     if (user) {
         localStorage.setItem('userData', JSON.stringify(user));
@@ -189,19 +189,55 @@ async function handleLogin(response) {
 }
 
 // ✅ Load Profile
+// async function loadProfile() {
+//     try {
+//         const response = await fetch(`${API_BASE}/profile`, {
+//             headers: { 'Authorization': `Bearer ${token}` }
+            
+//         });
+//         console.log("Sending token:", token);
+
+
+//         const data = await response.json();
+
+//         if (response.ok) {
+//             console.log('✅ Logged-in user:', data.user); 
+
+//             const profileInfo = document.getElementById('profile-info');
+//             profileInfo.innerHTML = `
+//                 <p><strong>Name:</strong> ${data.user.username}</p>
+//                 <p><strong>Email:</strong> ${data.user.email}</p>
+//                 <p><strong>Phone Number:</strong> ${data.user.phone_number || 'N/A'}</p>
+//             `;
+//         } else {
+//             showMessage(data.message || 'Failed to load profile.', 'error');
+//         }
+//     } catch (error) {
+//         console.error('Profile load error:', error);
+//         showMessage('Failed to load profile.', 'error');
+//     }
+// }
+
+
 async function loadProfile() {
     try {
-        const response = await fetch(`${API_BASE}/profile`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-            
-        });
-        console.log("Sending token:", tokenoken);
+        const token = localStorage.getItem('authToken'); // ✅ FIX
 
+        if (!token) {
+            console.warn('❌ No auth token found');
+            return;
+        }
+
+        const response = await fetch(`${API_BASE}/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
         const data = await response.json();
 
         if (response.ok) {
-            console.log('✅ Logged-in user:', data.user); 
+            console.log('✅ Logged-in user:', data.user);
 
             const profileInfo = document.getElementById('profile-info');
             profileInfo.innerHTML = `
@@ -210,13 +246,57 @@ async function loadProfile() {
                 <p><strong>Phone Number:</strong> ${data.user.phone_number || 'N/A'}</p>
             `;
         } else {
-            showMessage(data.message || 'Failed to load profile.', 'error');
+            showMessage(data.error || 'Failed to load profile.', 'error');
         }
     } catch (error) {
         console.error('Profile load error:', error);
         showMessage('Failed to load profile.', 'error');
     }
 }
+function openProfileModal() {
+    const modal = document.getElementById('profile-modal');
+    modal.style.display = 'block';
+    loadProfileIntoModal();
+}
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').style.display = 'none';
+}
+
+async function loadProfileIntoModal() {
+    const body = document.getElementById('profile-modal-body');
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        body.innerHTML = '<p>Please log in.</p>';
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/users/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            body.innerHTML = `<p>${data.error || 'Failed to load profile'}</p>`;
+            return;
+        }
+
+        body.innerHTML = `
+            <p><strong>Username:</strong> ${data.user.username}</p>
+            <p><strong>Email:</strong> ${data.user.email}</p>
+            <p><strong>Phone:</strong> ${data.user.phone_number || 'N/A'}</p>
+        `;
+    } catch (err) {
+        console.error(err);
+        body.innerHTML = '<p>Error loading profile.</p>';
+    }
+}
+
 
 
 // ✅ Logout

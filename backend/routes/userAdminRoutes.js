@@ -46,8 +46,7 @@ router.delete('/admins/:userId', auth, superAdminAuth, UserController.deleteAdmi
 // Get All Users
 router.get('/users', auth, UserController.getAllUsers);
 
-// Update User (Admin or Super Admin)
-// router.put('/users/:userId', auth, adminAuth, UserController.updateUser);
+
 // Delete User (Admin or Super Admin)
 router.delete('/users/:userId', auth, UserController.deleteUser);
 

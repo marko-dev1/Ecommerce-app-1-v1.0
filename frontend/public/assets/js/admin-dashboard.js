@@ -265,6 +265,35 @@
             `).join('');
         }
 
+function searchProducts(query) {
+    query = query.toLowerCase().trim();
+    const rows = document.querySelectorAll("#productsList tr");
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const name = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase() || "";
+        const price = row.querySelector("td:nth-child(3)")?.textContent.toLowerCase() || "";
+        const stock = row.querySelector("td:nth-child(4)")?.textContent.toLowerCase() || "";
+        const category = row.querySelector("td:nth-child(5)")?.textContent.toLowerCase() || "";
+
+        const match =
+            name.includes(query) ||
+            price.includes(query) ||
+            stock.includes(query) ||
+            category.includes(query);
+
+        if (match) {
+            row.style.display = "";
+            visibleCount++;
+        } else {
+            row.style.display = "none";
+        }
+    });
+
+   ''
+}
+
+
 
 async function loadOrders() {
     try {
@@ -348,6 +377,30 @@ function displayOrders(orders) {
     `).join('');
 }
 
+function searchOrders(query) {
+    query = query.toLowerCase();
+    const rows = document.querySelectorAll("#ordersList tr");
+    
+    rows.forEach(row => {
+        const orderId = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+        const user = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+        const amount = row.querySelector("td:nth-child(3)").textContent.toLowerCase();
+        const status = row.querySelector("td:nth-child(4)").textContent.toLowerCase();
+
+        if (
+            orderId.includes(query) ||
+            user.includes(query) ||
+            amount.includes(query) ||
+            status.includes(query)
+        ) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
+
 // ✅ Run it after page loads
 document.addEventListener('DOMContentLoaded', loadOrders);
 
@@ -397,6 +450,24 @@ document.addEventListener('DOMContentLoaded', loadOrders);
                 </tr>
             `).join('');
         }
+
+        function searchUsers(query) {
+    query = query.toLowerCase();
+    const rows = document.querySelectorAll("#usersList tr");
+    
+    rows.forEach(row => {
+        const username = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+        const email = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+        const phone = row.querySelector("td:nth-child(3)").textContent.toLowerCase();
+
+        if (username.includes(query) || email.includes(query) || phone.includes(query)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
 
         // Admins Management
         async function loadAdmins() {
@@ -852,12 +923,12 @@ function ensureModalExists() {
 
 // Enhanced order details function with better error handling
 async function viewOrderDetails(orderId) {
-    console.log('=== 🧾 viewOrderDetails Debug ===');
-    console.log('Raw input orderId:', orderId, '| Type:', typeof orderId);
+    // console.log('=== viewOrderDetails Debug ===');
+    // console.log('Raw input orderId:', orderId, '| Type:', typeof orderId);
 
     // Enhanced validation
     if (!orderId || ['undefined', 'null', ''].includes(String(orderId).trim())) {
-        console.error('❌ Invalid orderId:', orderId);
+        // console.error('❌ Invalid orderId:', orderId);
         showError('Invalid order ID provided');
         return;
     }
@@ -869,7 +940,7 @@ async function viewOrderDetails(orderId) {
         if (numericId && !isNaN(numericId)) {
             processedOrderId = parseInt(numericId);
         } else {
-            console.error('❌ No numeric ID found in:', orderId);
+            // console.error('❌ No numeric ID found in:', orderId);
             showError('Invalid order ID format');
             return;
         }
@@ -940,8 +1011,15 @@ function displayOrderDetails(order) {
     const orderDate = order.created_at || order.orderDate || order.date || null;
     const total = parseFloat(order.total_amount || order.total || 0);
     const items = order.items || [];
-    const customerName = order.customer_name || order.customer?.name || 'No';
-    const customerEmail = order.customer_email || order.customer?.email || 'N/A';
+    // const username_name = order.username || order.customer?.name || order.customerName || 'No name';
+    const username_name =
+    order.customer_name ||     // ← ADD THIS
+    order.username ||
+    order.name ||
+    order.customer?.name ||
+    order.customerName ||
+    'No name';
+    // const customerEmail = order.customer_email || order.customer?.email || 'N/A';
 
     // Get status badge class
     const statusClass = `status-${status.toLowerCase()}`;
@@ -965,7 +1043,7 @@ function displayOrderDetails(order) {
                 </div>
                 <div class="order-info-item">
                     <span class="order-info-label">Customer</span>
-                    <span class="order-info-value">${escapeHtml(customerName)}</span>
+                    <span class="order-info-value">${escapeHtml(username_name)}</span>
                 </div>
             </div>
         </div>
@@ -1072,7 +1150,7 @@ function showOrderFetchError(orderId, error) {
                 <p style="font-size: 0.875rem; opacity: 0.7;">Error: ${escapeHtml(error.message)}</p>
                 <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
                     <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
-                    <button class="btn btn-secondary" onclick="debugOrder(${orderId})">Debug</button>
+                    <!--<button class="btn btn-secondary" onclick="debugOrder(${orderId})">Debug</button>-->
                 </div>
             </div>
         `;

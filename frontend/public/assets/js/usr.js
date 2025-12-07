@@ -19,8 +19,8 @@ class AuthManager {
         const token = localStorage.getItem('authToken');
         const userData = localStorage.getItem('userData');
         
-        console.log('📝 Token exists:', !!token);
-        console.log('📝 User data exists:', !!userData);
+        // console.log('📝 Token exists:', !!token);
+        // console.log('📝 User data exists:', !!userData);
 
         if (token && userData) {
             try {
@@ -29,7 +29,7 @@ class AuthManager {
                 this.showAuthenticatedUI(userName);
                 console.log('✅ User authenticated:', userName);
                 
-                // Store user data for easy access
+                // Store user data fz
                 this.currentUser = user;
                 
             } catch (error) {

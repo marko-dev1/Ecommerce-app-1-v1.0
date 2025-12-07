@@ -33,15 +33,21 @@
                <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
 
 
-<div class="user-section">
-    <div class="user-menu-container" id="user-menu-container" style="display: none;">
+                <div class="user-section">
+            <div class="user-menu-container" id="user-menu-container" style="display: none;">
 
-        <span id="username-text" class="username-hover">Guest</span>
+               <span id="username-text" class="username-hover">Guest</span>
 
-        <div class="user-dropdown" id="user-dropdown">
-            <a href="/api/users/profile" class="dropdown-item">
+               <div class="user-dropdown" id="user-dropdown">
+            <!-- <a href="/profile" class="dropdown-item">
                 <span class="dropdown-icon">👤</span> User Profile
+            </a> -->
+
+            <a href="javascript:void(0)" class="dropdown-item" onclick="openProfileModal()">
+                <span class="dropdown-icon">👤</span> User Profile
+                
             </a>
+
 
             <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
                 <span class="dropdown-icon">📦</span> My Orders
@@ -97,9 +103,9 @@
     <div class="mobile-user-menu" id="mobile-user-menu" style="display: none;">
         <span id="mobile-username-text">Guest</span>
         <div class="user-dropdown">
-            <a href="/profile" class="dropdown-item" onclick="closeMobileMenu()">
-                <span class="dropdown-icon">👤</span>
-                User Profile
+            <a href="javascript:void(0)" class="dropdown-item" onclick="openProfileModal()">
+                <span class="dropdown-icon">👤</span> User Profile
+                
             </a>
             <a href="/orders" class="dropdown-item" onclick="closeMobileMenu()">
                 <span class="dropdown-icon">📦</span>
@@ -242,6 +248,27 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- profile -->
+
+<!-- User Profile Modal -->
+<div class="profile-modal" id="profile-modal">
+    <div class="close-btn" onclick="closeProfileModal()"></div>
+
+    <div class="profile-modal-content">
+        <div class="modal-header">
+            <h2>User Profile</h2>
+            <button class="close-btn" onclick="closeProfileModal()">×</button>
+        </div>
+
+        <div class="modal-body" id="profile-modal-body">
+            <p>Loading profile...</p>
+        </div>
+    </div>
+</div>
+
 
 
 

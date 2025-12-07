@@ -84,8 +84,10 @@
             <!-- Users Management Section -->
             <div id="users" class="content-section">
                 <h1>User Management</h1>
-                <input type="text" id="search-bar" placeholder="Search Users..." onkeyup="searchProducts(this.value)" />
-                <div id="usersTable">
+                <!-- <input type="text" id="search-bar" placeholder="Search Users..." onkeyup="searchProducts(this.value)" /> -->
+                     <input type="text" id="search-bar"  placeholder="Search Users..." onkeyup="searchUsers(this.value)"    autocomplete="off"/>
+        
+                     <div id="usersTable">
                     <table class="table">
                         <thead>
                             <tr>
@@ -106,7 +108,7 @@
             <!-- Orders Section -->
             <div id="orders" class="content-section">
                 <h1>Order Management</h1>
-                <input type="text" id="search-bar" placeholder="Search Orders..." onkeyup="searchProducts(this.value)" />
+                <input type="text" id="search-bar" placeholder="Enter Order number or Client Name" onkeyup="searchOrders(this.value)" />
                 <div id="ordersTable">
                     <table class="table">
                         <thead>

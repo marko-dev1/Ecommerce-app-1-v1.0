@@ -49,6 +49,7 @@ class User {
     }
 
     static async verifyPassword(plainPassword, hashedPassword) {
+         console.log('🔐 Admin login attempt:', { hashedPassword});
         return await bcrypt.compare(plainPassword, hashedPassword);
     }
 

@@ -6,7 +6,7 @@ class AuthController {
     // ===============================
     // 🔐 ADMIN LOGIN
     // ===============================
-    static async adminLogin(req, res) {
+   static async adminLogin(req, res) {
         try {
             const { username, password } = req.body;
             // console.log('🔐 Admin login attempt:', { username });
@@ -24,6 +24,7 @@ class AuthController {
             if (!['admin', 'super_admin'].includes(user.role)) {
                 return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
             }
+
 
             // Verify password
             const isValid = await bcrypt.compare(password, user.password);
@@ -75,7 +76,7 @@ static async login(req, res) {
                 username: user.username, 
                 role: user.role 
             },
-            process.env.JWT_SECRET || 'your-secret-key',
+            process.env.JWT_SECRET || '12345',
             { expiresIn: '24h' }
         );
 
@@ -122,13 +123,19 @@ static async login(req, res) {
     // ===============================
     // 🙍‍♂️ PROFILE
     // ===============================
+    // static async getProfile(req, res) {
+    //     try {
+    //         res.json({ user: req.user });
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Internal server error' });
+    //     }
+    // }
+
     static async getProfile(req, res) {
-        try {
-            res.json({ user: req.user });
-        } catch (error) {
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    }
+    console.log('AUTH USER:', req.user);
+    res.json({ user: req.user });
+}
+
 }
 
 module.exports = AuthController;
