@@ -18,7 +18,7 @@ let database;
 try {
     database = require('./config/database');
 } catch (error) {
-  
+
     process.exit(1);
 }
 
@@ -37,7 +37,7 @@ const loadRoute = (name, path, endpoint) => {
     try {
         const route = require(path);
         app.use(endpoint, route);
-       
+
         return true;
     } catch (error) {
         return false;
@@ -52,7 +52,7 @@ const routes = [
     { name: 'userAdminRoutes', path: './routes/userAdminRoutes', endpoint: '/api/admin' }
 ];
 
- const orderRoutes = require('./routes/orderRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 app.use('/api/orders', orderRoutes);
 
 let loadedCount = 0;
@@ -68,9 +68,19 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/admin-login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/public/admin-login.html'));
+    res.sendFile(path.join(__dirname, '../frontend/public/admin_login.html'));
 });
 
+
+app.get('/products', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public/product.html'));
+});
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
+});
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/public/contact.html'));
+});
 app.get('/', (req, res) => {
     res.json({ 
         message: 'Ecommerce API Server',
@@ -133,23 +143,23 @@ app.use((req, res) => {
 // Start server function
 const startServer = async () => {
     try {
-        
+
         // Verify testConnection exists and is a function
         if (!database.testConnection || typeof database.testConnection !== 'function') {
             throw new Error(`testConnection is not available. Available exports: ${Object.keys(database).join(', ')}`);
         }
-        
+
         const isConnected = await database.testConnection();
-        
+
         if (!isConnected) {
             throw new Error('Database connection failed. Please check your MySQL server and credentials.');
         }
-        
-        const PORT = process.env.PORT || 3000;
+
+        const PORT = process.env.PORT || 1100;
         app.listen(PORT, () => {
             console.log(`\n🚀 Server running on port ${PORT}`);
         });
-        
+
     } catch (error) {
         process.exit(1);
     }

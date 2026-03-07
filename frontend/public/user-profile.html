@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="../assets/css/user-styles.css">
+    <link rel="stylesheet" href="/assets/css/user-styles.css">
+   
+    <style>
+   
+    </style>
 </head>
-<body>
+<body style="background-image: url('/assets/logo/vitronics technologies ltd.png');
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+     background-color: #f0f0f0; 
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;" >
     <div class="container">
         <div class="form-container">
             <!-- Registration Form -->
@@ -55,33 +69,11 @@
             </div>
 
          
-
-            <!-- <div id="profile-section" class="form" style="display: none;">
-    <h2>Profile</h2>
-    <div id="profile-info"></div>
-    <button onclick="logout()">Logout</button>
-   <a href="index.html"> <button onclick="continueToHome()">Continue</button></a>
-</div> -->
 <div id="profile-section" class="form" style="display: none;">
     <h2>Profile</h2>
     <div id="profile-info"></div>
 
-    <!-- User Profile Modal -->
-<!-- <div class="modal" id="profile-modal">
-    <div class="modal-overlay" onclick="closeProfileModal()"></div>
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>User Profile</h2>
-            <button class="modal-close" onclick="closeProfileModal()">×</button>
-        </div>
-
-        <div class="modal-body" id="profile-modal-body">
-            <p>Loading profile...</p>
-        </div>
-    </div>
-</div> -->
-
+  
     <button onclick="logout()">Logout</button>
    
     <button onclick="continueToHome()">Continue to Home</button>
@@ -91,10 +83,10 @@
         
         <div id="message" class="message"></div>
     </div>
-     <script src="./assets/js/user-script.js"></script>
+     <script src="/assets/js/user-script.js"></script>
     <!-- <script src="./assets/js/admin-dashboard.js"></script> -->
    
     <!-- <script src="./assets/js/script.js"></script>  -->
-      <script src="./assets/js/usr.js"></script>
+      <script src="/assets/js/usr.js"></script>
 </body>
 </html>

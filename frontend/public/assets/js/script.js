@@ -1,12 +1,12 @@
 
-// Main E-commerce Application
+// Main Application
 class ECommerceApp {
     constructor() {
         this.products = [];
         this.currentCategory = 'all';
         this.cart = [];
         this.currentToken = localStorage.getItem('token');
-        this.isSyncing = false; // Prevent multiple sync operations
+        this.isSyncing = false; 
         this.init();
     }
 
@@ -257,7 +257,7 @@ class ECommerceApp {
 
     checkout() {
         if (this.cart.length === 0) {
-            this.showNotification('Your cart is empty!');
+            this.showNotification('Your cart is empty!Please some items');
             return;
         }
         this.showCheckoutOptions();
@@ -312,6 +312,8 @@ class ECommerceApp {
     const itemCount = this.getCartItemCount();
     const total = this.getCartTotal().toFixed(2);
     const finalTotal = (parseFloat(total) + 100).toFixed(2);
+    // const customer_name = this.getCurrentUserName();
+    // const phone_number = this.getCurrentUserPhone();
     const self = this;
 
     const modal = document.getElementById('checkoutModal');
@@ -319,6 +321,7 @@ class ECommerceApp {
     const proceedBtn = document.getElementById('proceedCheckout');
     const cancelBtn = document.getElementById('cancelCheckout');
 
+    // Add customer information form to modal
     // Add customer information form to modal
     details.innerHTML = `
         <div class="checkout-form">
@@ -332,7 +335,7 @@ class ECommerceApp {
                 <h4>Customer Information</h4>
                  <div class="form-group">
                     <label for="customerName">Enter Name *</label>
-                    <input type="tel" id="customerName" required placeholder="e.g Micheal Monach">
+                    <input type="text" id="customerName" required placeholder="e.g Micheal Monach">
                 </div>
                 <div class="form-group">
                     <label for="customerPhone">Phone Number *</label>
@@ -350,7 +353,8 @@ class ECommerceApp {
             
             <div class="payment-info">
                 <h4>Payment Instructions</h4>
-                <p>Enter Business Till No: <strong>123456</strong> and pay Ksh ${finalTotal} to complete payment.</p>
+                <p> Kindly note, we are only accepting online payments via pochi la biashara</p>
+                <p>Enter Pochi  Biashara No: <strong style= color:red;>0703 182 530</strong> and pay Ksh ${finalTotal} to complete payment.</p>
             </div>
         </div>
     `;
@@ -432,7 +436,7 @@ class ECommerceApp {
 
      Toastify({
     text: `✅ Order Confirmed!\nOrder ID: ${result.orderId}\nTotal: Ksh  ${finalTotal}
-    \nPay via M-Pesa Till No: 123456. 
+    \nPay via M-Pesa Pochi La Biashara No: 0703 182 530. 
      \nThis message will automatically close after 2 minutes`,
     duration: 120000,  // auto close after 10s
     close: true,       // adds manual close button
@@ -633,7 +637,7 @@ Name: ${order.user.fullName}
 Phone: ${order.user.phone}
 Address: ${order.user.deliveryAddress}
 
-📞 Call/WhatsApp for assistance: +254 703 182530
+🐀񇠠Call/WhatsApp for assistance: +254 703 182530
         `.trim();
 
         // Create the modal
@@ -926,7 +930,7 @@ ${message}
 *NEW ORDER - VITRONICS STORE* 📄
 
 Order #${order.id}
-Total: Ksh ${order.finalTotal.toLocaleString()}
+
 
 I've attached the PDF receipt with all order details.
 
@@ -1220,57 +1224,6 @@ Thank you! 🛒
     }
 
 
-// displayProducts(products) {
-//   const grid = document.getElementById('products-grid');
-//   const loading = document.getElementById('loading');
-//   const error = document.getElementById('error-message');
-  
-//   loading.style.display = 'none';
-//   error.style.display = 'none';
-
-//   if (products.length === 0) {
-//     grid.innerHTML = '<p class="no-products" style="text-align: center; padding: 40px; color: #666; grid-column: 1 / -1;">No products found in this category.</p>';
-//     return;
-//   }
-
-//   grid.innerHTML = products.map(product => {
-//     const imageUrl = product.image_url || '/uploads/default-product.jpg';
-
-//     return `
-//       <!--  Added data-name for searching -->
-//       <div class="product-card" data-name="${product.name.toLowerCase()}">
-//           <div class="product-image-container" onclick="app.showProductDetail(${product.id})">
-//               <img src="${imageUrl}"  
-//                    alt="${product.name}" 
-//                    class="product-image"
-//                    onerror="this.onerror=null; this.src='/uploads/default-product.jpg'">
-//               ${product.stock <= 0 ? '<div class="out-of-stock-overlay">Out of Stock</div>' : ''}
-//           </div>
-          
-//           <div class="product-info">
-//               <h3 class="product-name">${product.name}</h3>
-//              <!-- <div class="product-price">Ksh ${parseFloat(product.price).toFixed(2)}</div>-->
-//                <div class="product-price">Ksh ${Number(product.price).toLocaleString('en-KE', { minimumFractionDigits: 2 })}</div>
-//               <p class="product-description">
-//                 ${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}
-//               </p>
-//               <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-//                   ${product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-//               </div>
-//           </div> 
-          
-//           <div class="add-to-cart-info">
-//               <button class="add-to-cart-btn" title="Add to cart"
-//                   onclick="app.addToCartFromButton(${product.id})"
-//                   ${product.stock <= 0 ? 'disabled' : ''}>
-//                   🛒
-//               </button>
-//           </div>
-//       </div>
-//     `;
-//   }).join('');
-// }
-
 displayProducts(products) {
   const grid = document.getElementById('products-grid');
   const loading = document.getElementById('loading');
@@ -1280,7 +1233,7 @@ displayProducts(products) {
   error.style.display = 'none';
 
   if (products.length === 0) {
-    grid.innerHTML = '<p class="no-products" style="text-align: center; padding: 40px; color: #666; grid-column: 1 / -1;">No products found in this category.</p>';
+    grid.innerHTML = '<p class="no-products" style="text-align: center; padding: 20px; color: #666; grid-column: 1 / -1;">No products added for now in this category, please come back later.Thank you!.</p>';
     return;
   }
 
@@ -1289,7 +1242,7 @@ displayProducts(products) {
 
   grid.innerHTML = products.map(product => {
     const imageUrl = product.image_url || '/uploads/default-product.jpg';
-    const watchers = randomWatching(); // 👈 Generate for each product
+    const watchers = randomWatching(); // Generate for each product
 
     return `
       <div class="product-card" data-name="${product.name.toLowerCase()}">
@@ -1308,7 +1261,7 @@ displayProducts(products) {
              
 
               <p class="product-description">
-                ${product.description ? product.description.substring(0, 100) + '...' : 'No description available'}
+                ${product.description ? product.description.substring(0, 50) + '...' : 'No description available'}
               </p>
 
               <div class="stock-info ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
@@ -1320,7 +1273,7 @@ displayProducts(products) {
               <button class="add-to-cart-btn" title="Add to cart"
                   onclick="app.addToCartFromButton(${product.id})"
                   ${product.stock <= 0 ? 'disabled' : ''}>
-                  🛒
+                 BUY NOW
               </button>
            
              <!-- <p class="watching-text">${watchers} people are viewing this product now</p>-->
@@ -1433,12 +1386,12 @@ displayProductModal(product) {
         const title = document.getElementById('section-title');
         const categoryNames = {
             'all': 'All Products',
-            'electronics': 'Electronics',
-            'phones': 'Phones',
-            'phones accessories': 'Phone Accessories',
-            'laptop accessories': 'Laptop Accessories',
-            'industrial': 'Industrial Equipment',
-             'smartWatches': 'Smart Watches'
+            'controllers': 'Plcs & Controllers',
+            'instrumentation': 'Instrumentation',
+            'display': 'Displays & Monitors',
+            'motors': 'Motors, Drives & Accessories',
+            'sensors':'Sensors',
+             'smartdevices': 'Smart Devices'
         };
         
         title.textContent = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);

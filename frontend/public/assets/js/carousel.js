@@ -10,13 +10,13 @@ class Carousel {
 
         // Promo messages mapped to slides
         this.messages = [
-            { text: "Mega Sale!", subtext: "Up to 50% OFF today only" },
-            { text: "Exclusive Deals!", subtext: "Save more on top brands" },
-            { text: "Limited Time Offer!", subtext: "Grab your discount now" },
-            { text: "Flash Sale!", subtext: "Hurry! Ending soon" },
-            { text: "Big Discounts!", subtext: "New arrivals on sale" },
-            { text: "Hot Deals!", subtext: "Shop smart, save big" },
-            { text: "Clearance Sale!", subtext: "Up to 70% off select items" }
+            { text: "", subtext: "" },
+            // { text: "Exclusive Deals!", subtext: "Save more on top brands" },
+            // { text: "Limited Time Offer!", subtext: "Grab your discount now" },
+            // { text: "Flash Sale!", subtext: "Hurry! Ending soon" },
+            // { text: "Big Discounts!", subtext: "New arrivals on sale" },
+            // { text: "Hot Deals!", subtext: "Shop smart, save big" },
+            // { text: "Clearance Sale!", subtext: "Up to 70% off select items" }
         ];
 
         this.init();

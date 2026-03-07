@@ -31,7 +31,8 @@ router.post('/checkout', auth, async (req, res) => {
             total_amount, 
             shipping_address, 
             payment_method, 
-            customer_phone, 
+            customer_phone,
+            customer_name,
             cart_items 
         } = req.body;
 
@@ -39,6 +40,8 @@ router.post('/checkout', auth, async (req, res) => {
             user_id,
             total_amount,
             customer_phone,
+            shipping_address,
+            payment_method,
             item_count: cart_items ? cart_items.length : 0,
             authenticated_user: req.user
         });
@@ -78,14 +81,18 @@ router.post('/checkout', auth, async (req, res) => {
                     total_amount, 
                     shipping_address, 
                     payment_method, 
-                    customer_phone
-                ) VALUES (?, ?, ?, ?, ?)`,
+                    customer_phone,
+                    customer_name
+                ) VALUES (?, ?, ?, ?, ?, ?)`,
                 [
                     user_id, // 🚨 Use authenticated user ID
                     parseFloat(total_amount),
                     shipping_address,
-                    payment_method || 'standard_checkout',
-                    customer_phone
+                    // payment_method || 'standard_checkout',
+                    payment_method ? payment_method : 'WhatsApp',
+
+                    customer_phone,
+                    customer_name
                 ]
             );
 
@@ -145,64 +152,6 @@ router.post('/checkout', auth, async (req, res) => {
         }
     }
 });
-
-// 🆕 GET /api/orders/user/:userId - Get user orders (PROTECTED)
-// router.get('/user/:userId', auth, async (req, res) => {
-//     try {
-//         const requestedUserId = parseInt(req.params.userId);
-//         const authenticatedUserId = req.user.userId || req.user.id;
-        
-//         console.log('👤 Fetching user orders:', {
-//             requestedUserId,
-//             authenticatedUserId,
-//             userRole: req.user.role
-//         });
-
-//         // 🚨 Security check: Users can only view their own orders unless admin
-//         if (req.user.role !== 'admin' && req.user.role !== 'super_admin' && requestedUserId !== authenticatedUserId) {
-//             return res.status(403).json({
-//                 success: false,
-//                 message: 'Access denied. You can only view your own orders.'
-//             });
-//         }
-
-//         const [orders] = await db.pool.execute(`
-//             SELECT o.*, u.username, u.email 
-//             FROM orders o 
-//             LEFT JOIN users u ON o.user_id = u.id 
-//             WHERE o.user_id = ?
-//             ORDER BY o.created_at DESC
-//         `, [requestedUserId]);
-
-//         // For each order, get order items
-//         for (let order of orders) {
-//             const [items] = await db.pool.execute(`
-//                 SELECT * FROM order_items WHERE order_id = ?
-//             `, [order.id]);
-//             order.items = items;
-            
-//             // Calculate item totals for display
-//             order.items.forEach(item => {
-//                 item.item_total = (item.price * item.quantity).toFixed(2);
-//             });
-//         }
-
-//         console.log(`✅ Found ${orders.length} orders for user ${requestedUserId}`);
-
-//         res.json({
-//             success: true,
-//             data: orders, // 🚨 Changed from 'orders' to 'data' to match your frontend expectation
-//             count: orders.length
-//         });
-
-//     } catch (error) {
-//         console.error('❌ Error fetching user orders:', error);
-//         res.status(500).json({
-//             success: false,
-//             message: 'Failed to fetch user orders'
-//         });
-//     }
-// });
 
 
 // In your orderRoutes.js - Update the user orders route

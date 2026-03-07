@@ -96,6 +96,7 @@ const createTables = async () => {
                 shipping_address TEXT NOT NULL,
                 payment_method VARCHAR(50),
                 customer_phone VARCHAR(20),
+                customer_Name VARCHAR(50),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
@@ -139,7 +140,7 @@ const createDefaultAdmin = async () => {
             ['super_admin']
         );
         if (rows.length === 0) {
-            // Create default super admin (password: admin123)
+            
             const bcrypt = require('bcrypt');
             const hashedPassword = await bcrypt.hash('admin123', 10);
             
@@ -148,10 +149,7 @@ const createDefaultAdmin = async () => {
                 ['superadmin', 'admin@ecommerce.com', hashedPassword, 'super_admin', 'Super Administrator']
             );
             
-            // console.log('✅ Default super admin created:');
-            // console.log('   Username: superadmin');
-            // console.log('   Email: admin@ecommerce.com');
-            // console.log('   Password: admin123');
+         
         } else {
             // console.log('✅ Super admin already exists');
         }

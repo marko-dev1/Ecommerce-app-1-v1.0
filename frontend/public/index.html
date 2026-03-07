@@ -1,268 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- SEO OPTIMIZATIONS START -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitronics Store</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/carousel.css">
-     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
-    />
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
-<body>
- <header>
-    <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="logo"><a href="index.html">Vitronics Store</a></h1>
-            
-            <!-- Desktop Navigation -->
-            <div class="nav-links">
-                <a href="#" class="nav-link" onclick="showAllProducts()">All Categories</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('electronics')">Electronics</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('phones')">Phones</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('phones accessories')">Phone Accessories</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('laptop accessories')">Laptop & Accessories</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('industrial')">Industrial</a>
-                <a href="#" class="nav-link" onclick="filterByCategory('smartWatches')">Smart Watches</a>
-               <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
-
-
-                <div class="user-section">
-            <div class="user-menu-container" id="user-menu-container" style="display: none;">
-
-               <span id="username-text" class="username-hover">Guest</span>
-
-               <div class="user-dropdown" id="user-dropdown">
-            <!-- <a href="/profile" class="dropdown-item">
-                <span class="dropdown-icon">👤</span> User Profile
-            </a> -->
-
-            <a href="javascript:void(0)" class="dropdown-item" onclick="openProfileModal()">
-                <span class="dropdown-icon">👤</span> User Profile
-                
-            </a>
-
-
-            <a href="javascript:void(0)" class="dropdown-item" onclick="authManager.openOrdersModal()">
-                <span class="dropdown-icon">📦</span> My Orders
-            </a>
-
-            <a href="/api/pswd" class="dropdown-item">
-                <span class="dropdown-icon">🔒</span> Change Password
-            </a>
-            <!-- <div class="dropdown-divider"></div> -->
-
-            <button class="dropdown-item logout-btn" id="logout-btn">
-                <span class="dropdown-icon">🚪</span> Logout
-            </button>
-        </div>
-    </div>
-
-    <button class="login-btn" id="login-btn" onclick="window.location.href='user-profile.html'">Login</button>
-</div>
-
-
-            </div>
-            
-          
-
-            <!-- Hamburger Menu Button -->
-            <button class="hamburger-menu" id="hamburgerMenu">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
-        </div>
-
-        <div class="cart-icon" onclick="app.showCart()">
-            🛒
-            <span id="cart-count">0</span>
-        </div>
-    </nav>
-
-    <!-- Mobile Navigation Menu -->
-    <div class="mobile-nav" id="mobileNav">
-        <button class="mobile-close" id="mobileClose">×</button>
-        
-        <div class="mobile-nav-links">
-            <a href="#" class="mobile-nav-link" onclick="showAllProducts(); closeMobileMenu()">All Products</a>
-            <a href="#" class="mobile-nav-link" onclick="filterByCategory('electronics'); closeMobileMenu()">Electronics</a>
-            <a href="#" class="mobile-nav-link" onclick="filterByCategory('phones'); closeMobileMenu()">Phones</a>
-            <a href="#" class="mobile-nav-link" onclick="filterByCategory('phones accessories'); closeMobileMenu()">Phone Accessories</a>
-            <a href="#" class="mobile-nav-link" onclick="filterByCategory('laptop accessories'); closeMobileMenu()">Laptop & Accessories</a>
-            <a href="#" class="mobile-nav-link" onclick="filterByCategory('industrial'); closeMobileMenu()">Industrial</a>
-             <a href="#" class="mobile-nav-link" onclick="filterByCategory('smartWatches'); closeMobileMenu()">Smart Watches</a>
-            <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
-           <div class="user-section">
-    <div class="mobile-user-menu" id="mobile-user-menu" style="display: none;">
-        <span id="mobile-username-text">Guest</span>
-        <div class="user-dropdown">
-            <a href="javascript:void(0)" class="dropdown-item" onclick="openProfileModal()">
-                <span class="dropdown-icon">👤</span> User Profile
-                
-            </a>
-            <a href="/orders" class="dropdown-item" onclick="closeMobileMenu()">
-                <span class="dropdown-icon">📦</span>
-                My Orders
-            </a>
-            <a href="/api/Pwsd" class="dropdown-item" onclick="closeMobileMenu()">
-                <span class="dropdown-icon">🔒</span>
-                Change Password
-            </a>
-            <!-- <div class="dropdown-divider"></div> -->
-           
-            <button class="dropdown-item logout-btn" onclick="closeMobileMenu()">
-                <span class="dropdown-icon">🚪</span>
-                Logout
-            </button>
-        </div>
-    </div>
+    <!-- Primary Meta Tags -->
+    <title>Vitronics Technologies Ltd | Industrial Automation & Technical Services Kenya</title>
+    <!-- FIX: Update these to match your actual business -->
+    <meta property="og:title" content="Vitronics Technologies Ltd - Industrial Automation & Technical Services">
+    <meta property="og:description"
+        content="Leading industrial automation solutions provider in Kenya: PLC systems, control panels, sensors, motors">
+    <meta property="twitter:title" content="Vitronics Technologies Ltd - Industrial Automation Kenya">
+    <meta property="twitter:description"
+        content="Industrial automation, PLC programming, control systems and technical services in Kenya">
+         
+                      
+    <!-- Bootstrap CSS  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <button class="login-btn" id="mobile-login-btn" onclick="window.location.href='user-profile.html'">Login</button>
-</div>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vitronictechnologies.co.ke/">
+    <meta property="og:title" content="Vitronics Technologies Ltd - Electronics Store">
+    <meta property="og:description"
+        content="Your trusted electronics supplier in Kenya for phones, screens, batteries & accessories">
+    <meta property="og:image" content="https://vitronictechnologies.co.ke/assets/logo/vitronics-technologies-ltd.png">
+
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vitronictechnologies.co.ke/">
+    <meta property="twitter:title" content="Vitronics Technologies Ltd - Electronics Store">
+    <meta property="twitter:description"
+        content="Your trusted electronics supplier in Kenya for phones, screens, batteries & accessories">
+    <meta property="twitter:image"
+        content="https://vitronictechnologies.co.ke/assets/logo/logo.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vitronictechnologies.co.ke/">
+
+    <!-- Structured Data for SEO (JSON-LD) -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            "name": "Vitronics Technologies Ltd",
+            "description": "Industrial automation and technical services provider in Kenya",
+            "url": "https://vitronicstechnologies.co.ke",
+            "telephone": "+254703182530",
+            "email": "info@vitronicstechnologies.co.ke",
+            "areaServed": ["Kenya", "East Africa"],
+            "serviceType": [
+                "Industrial Automation",
+                "Industrial spares and consultancy services",
+                "PLC Programming",
+                "Control Panel Installation",
+                "Technical Training",
+                "Industrial Maintenance and system upgrade"
+            ],
+            "makesOffer": [
+                {
+                    "@type": "Service",
+                    "name": "PLC System Installation",
+                    "description": "Design and installation of PLC control systems"
+                },
+                {
+                    "@type": "Service",
+                    "name": "Industrial Automation",
+                    "description": "Automation solutions for manufacturing plants"
+                }
+            ]
+        }
+    </script>
+
+    <!-- Local Business Schema -->
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Vitronics Technologies Ltd",
+        "description": "Industrial spares and accessories in Nairobi, Kenya",
+        "url": "https://vitronictechnologies.co.ke/",
+        "telephone": "+254703182530",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "Kenya",
+            "addressRegion": "Nairobi"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "-1.2921",
+            "longitude": "36.8219"
+        },
+        "openingHoursSpecification": [{
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "08:00",
+            "closes": "18:00"
+        }, {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "09:00",
+            "closes": "14:00"
+        }]
+    }
+    </script>
+    <!-- SEO OPTIMIZATIONS END -->
+
+    <!-- EXISTING STYLES -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/landing.css">
+    <link rel="stylesheet" href="./assets/css/carousel.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">   -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">    
+    
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> -->
+</head>
+
+<body>
+<!-- Navigation -->
+<header class="sticky-top" >
+    <nav class="navbar navbar-expand-lg">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white"> -->
+
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <!-- <img src="assets/logo/vitronics technologies ltd.png" class="logo" alt="Vitronics Technologies Logo"> -->
+                <img src="assets/logo/vitronics technologies ltd.png"
+                     class="logo"
+                     alt="Vitronics Technologies Logo"
+                     loading="lazy">
+                <span class="brand-text">Vitronics Technologies</span>
+            </a>
+
+            <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto ">
+                    <li class="nav-item"><a class="nav-link " href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categories">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <div class="search-box me-3">
+                        <label for="search-bar" class="visually-hidden">Search products</label>
+                    <input type="text" id="search-bar" placeholder="Search..." onkeyup="searchProducts(this.value)" />
+                        <!-- <i class="fas fa-search"></i> -->
+                    </div>
+
+
+                    <div class="user-section me-3">
+                        <div class="user-menu-container" id="user-menu-container" style="display: none;">
+                            <span id="username-text" class="username-hover">Guest</span>
+                            <div class="user-dropdown" id="user-dropdown">
+                                <a href="javascript:void(0)" class="dropdown-item" onclick="openProfileModal()">
+                                    <i class="fas fa-user me-2"></i>Profile
+                                </a>
+                                <a href="javascript:void(0)" class="dropdown-item"
+                                    onclick="authManager.openOrdersModal()">
+                                    <i class="fas fa-box me-2"></i>My Orders
+                                </a>
+                                <button class="dropdown-item logout-btn" id="logout-btn">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm" id="login-btn" onclick="window.location.href='user-profile.html'">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </button>
+                    </div>
+
+                    
+
+                    <div class="cart-icon" onclick="app.showCart()">
+                   
+
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="cart-badge">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      
-    </div>
+
+
+    </nav>
 </header>
 
-    <main>
-   
-
-         <!-- Hero Section with Carousel -->
-    <section class="hero" id="home">
-        <div class="carousel">
-            <!-- Slide 1 -->
-            <div class="carousel-slide">
-                <img src="./img/images/phones.png" alt="Phone accessories">
-                <div class="carousel-overlay">
-                   
+<!-- Hero Section -->
+<section class="hero-section" id="home">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">Industrial Automation Solutions</h1>
+                    <p class="hero-subtitle">Premium PLCs, Sensors, Motors & Smart Devices for Modern Industry</p>
+                    <p class="hero-description">
+                        Vitronics Technologies provides cutting-edge industrial automation products
+                        and solutions to optimize your production processes and enhance efficiency.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#products" class="hero-btn primary-btn">
+                            <i class="fas fa-shopping-cart me-2"></i>Shop Now
+                        </a>
+                        <a href="#categories" class="hero-btn outline-btn">
+                            <i class="fas fa-th-large me-2"></i>Browse Categories
+                        </a>
+                    </div>
+                    <div class="hero-features mt-4">
+                        <div class="feature">
+                            <i class="fas fa-shipping-fast"></i>
+                            <span>Fast Shipping</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-headset"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-award"></i>
+                            <span>Quality Guaranteed</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Slide 2 -->
-            <div class="carousel-slide">
-                <img src="./img/images/phone_cases_1.png" alt="Phone cases">
-                <div class="carousel-overlay">
-                   
+            <div class="col-lg-6">
+                <div class="hero-image">
+                    <div class="carousel">
+                        <div class="carousel-slide active">
+                            <img src="./img/images/plc.png" alt="PLC Systems">
+                           <!-- <div class="carousel-caption">
+                                <h5>Advanced PLC Systems</h5>
+                                <p>Industrial automation controllers</p>
+                            </div>-->
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="./img/images/motors.png" alt="Industrial Motors">
+                           <!-- <div class="carousel-caption">
+                                <h5>High-Torque Motors</h5>
+                                <p>Precision industrial motors</p>
+                            </div>-->
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="./img/images/sensors.png" alt="Industrial Sensors">
+                           <!-- <div class="carousel-caption">
+                                <h5>Smart Sensors</h5>
+                                <p>Accurate sensing solutions</p>
+                            </div>-->
+                        </div>
+                    </div>
+                    <button class="carousel-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
-             <!-- Slide 2 duplicate-->
-             
-            
-            <!-- Slide 3 -->
-            <div class="carousel-slide">
-                <img src="./img/images/QC-3.0.png" alt="Chargers">
-                <div class="carousel-overlay">
-               
-                </div>
-            </div>
-             <!-- Slide 3 duplicate-->
-           
-
-         <!-- Slide 4-->
-            
-         <!-- Slide 5-->
-
-         <!-- Slide 6-->
-         
-             <!-- Slide 7-->
-             <div class="carousel-slide">
-                <img src="./img/images/TWS_JBL1.png" alt="AirPods">
-                <div class="carousel-overlay">
-            
-                </div>
-            </div>
-
-        </div>
-        
-        <button class="carousel-btn prev" id="prevBtn">&#10094;</button>
-        <button class="carousel-btn next" id="nextBtn">&#10095;</button>
-        
-        <div class="carousel-indicators" id="indicators">
-            <span class="indicator active" data-slide="0"></span>
-            <span class="indicator" data-slide="1"></span>
-            <span class="indicator" data-slide="2"></span>
-        </div>
-    </section>
-
-        <section class="products-section">
-            <div class="container">
-                <h2 id="section-title">All Products</h2>
-                <div class="products-grid" id="products-grid" >
-                    <!-- Products will be loaded here -->
-                </div>
-                <div id="loading" class="loading">Loading products...</div>
-                <div id="error-message" class="error-message" style="display: none;"></div>
-            </div>
-        </section>
-    </main>
-
-   
-
-    <!-- Product Modal -->
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="modal-content"></div>
         </div>
     </div>
-<!-- ---------------------------------------for new arrivals section-------------------------------- -->
-       <!-- <section class="products-section">
-            <div class="container">
-                <h2 id="section-title">New Arrivals</h2>
-                <div class="products-grid" id="products-grid" > -->
-                    <!-- Products will be loaded here -->
-                <!-- </div>
-                <div id="loading" class="loading">Loading New Arrival products...</div>
-                <div id="error-message" class="error-message" style="display: none;"></div>
+</section>
+
+<!-- Categories Section -->
+
+
+
+<section class="categories-section py-5" id="categories">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Product Categories</h2>
+            <p class="section-subtitle">Browse our wide range of industrial automation products</p>
+        </div>
+
+        <div class="row g-3 g-md-4">
+            <div class="col-6 col-md-4 col-lg-2" id="instrumentation">
+                <div class="category-card" onclick="scrollAndFilter('Instrumentation')">
+                    <div class="category-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                       
+                    </div>
+                    <h5>Instrumentation</h5>
+                    <p>Measurement & Control</p>
+                </div>
             </div>
-        </section> -->
-<!-- -------------------------------------------------------------------------------------------- -->
-    <!-- Checkout Confirmation Modal -->
+
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="category-card" onclick="scrollAndFilter('Display')">
+                    <div class="category-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h5>Displays</h5>
+                    <p>Industrial Monitors</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="category-card" onclick="scrollAndFilter('Motors')">
+                    <div class="category-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h5>Motors</h5>
+                    <p>Industrial Motors</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="category-card" onclick="scrollAndFilter('PLCs & Controllers')">
+                    <div class="category-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h5>PLCs</h5>
+                    <p>Controllers & Systems</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2" id="sensors">
+                <div class="category-card" onclick="scrollAndFilter('Sensors')">
+                    <div class="category-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h5>Sensors</h5>
+                    <p>Detection & Sensing</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg-2" id="smart-devices">
+                <div class="category-card" onclick="scrollAndFilter('SmartDevices')">
+                    <div class="category-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>Smart Devices</h5>
+                    <p>IoT & Automation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Featured Products -->
+<section class="products-section py-5 bg-light" id="products">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title" id="shop">Featured Products</h2>
+            <p class="section-subtitle">Top quality industrial automation products</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <div class="filter-buttons">
+                    <button class="btn btn-outline-primary active" onclick="showAllProducts()">All Products</button>
+                    <button class="btn btn-outline-primary" onclick="filterByCategory('PLCs & Controllers')">PLCs</button>
+                    <button class="btn btn-outline-primary" onclick="filterByCategory('Sensors')">Sensors</button>
+                    <button class="btn btn-outline-primary" onclick="filterByCategory('Motors')" >Motors</button>
+                    <button class="btn btn-outline-primary" onclick="showNewArrivals() ('New arrivals')">New Arrivals</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="products-grid" id="products-grid">
+            <!-- Products will be loaded here -->
+        </div>
+
+        <div id="loading" class="loading text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading products...</p>
+        </div>
+
+        <div id="error-message" class="error-message text-center py-5" style="display: none;"></div>
+
+        <div class="text-center mt-5">
+            <button class="btn btn-primary btn-lg" onclick="loadMoreProducts()">
+                    <i class="fas fa-plus me-2"></i>Load More Products
+                </button>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="features-section py-5" id="about">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Why Choose Vitronics</h2>
+            <p class="section-subtitle">We deliver excellence in industrial automation</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4>Quality Products</h4>
+                    <p>All our products meet international quality standards and come with warranties.</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4>Technical Support</h4>
+                    <p>Our expert engineers provide 24/7 technical support and installation guidance.</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h4>Fast Delivery</h4>
+                    <p>We ensure timely delivery of products across Kenya and East Africa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer -->
+<footer class="footer py-2">
+    <div class="container">
+        <div class="row">
+            <div class="footer">
+                <div class="footer-brand">
+                    <img src="assets/logo/logo.png" class="footer-logo" alt="Vitronics Logo">
+                    <h4>Vitronics Technologies Ltd</h4>
+                    <p>Leading provider of industrial automation solutions in Nairobi.</p>
+                    
+                        <p>Phone : 0703 182 530</p>
+                        <p>Email : info@vitronictechnologies.co.ke</p>
+                        <p> Copyright © 2026 All Rights Reserved</p>
+                        
+                        
+                    </div>
+                </div>
+              
+</footer>
+
+
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close" role="button" tabindex="0" aria-label="Close">&times;</span>
+
+        <div id="modal-content"></div>
+    </div>
+</div>
+
 <div id="checkoutModal" class="modal">
-  <div class="modal-content">
-    <h2>Confirm Checkout</h2>
-    <p id="checkoutDetails"></p>
-    <div class="modal-buttons">
-      <button id="proceedCheckout">Complete</button>
-      <button id="cancelCheckout">Cancel</button>
+    <div class="modal-content">
+        <h2>Confirm Checkout</h2>
+        <p id="checkoutDetails"></p>
+        <div class="modal-buttons">
+            <button id="proceedCheckout" class="btn btn-success">Complete</button>
+            <button id="cancelCheckout" class="btn btn-secondary">Cancel</button>
+        </div>
     </div>
-  </div>
 </div>
 
-
-  <!-- Order Details Modal -->
 <div id="orderDetailsModal" class="order-modal">
-  <div class="order-modal-content">
-    <span class="close-btn" onclick="closeOrderModal()">&times;</span>
-    <h2>Order Details</h2>
-    <div id="orderDetailsContent" class="order-details-content">
-      <p>Loading order details...</p>
+    <div class="order-modal-content">
+        <span class="close-btn" onclick="closeOrderModal()">&times;</span>
+        <h2>Order Details</h2>
+        <div id="orderDetailsContent" class="order-details-content"></div>
     </div>
-  </div>
 </div>
 
-
-
-<!-- profile -->
-
-<!-- User Profile Modal -->
 <div class="profile-modal" id="profile-modal">
-    <div class="close-btn" onclick="closeProfileModal()"></div>
-
     <div class="profile-modal-content">
         <div class="modal-header">
             <h2>User Profile</h2>
             <button class="close-btn" onclick="closeProfileModal()">×</button>
         </div>
-
         <div class="modal-body" id="profile-modal-body">
             <p>Loading profile...</p>
         </div>
@@ -270,25 +490,122 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 
-     <footer>
-        <div class="container">
-            <p>&copy; 2025 Vitronics Technologies. All rights reserved.</p>
-        </div>
-    </footer>
+    <!-- <script src="./vitronics/public/assets/js/helper.js" defer></script> -->
+    <script src="./assets/js/script.js" defer></script>
+    <script src="./assets/js/landing.js" defer></script>
+    <script src="./assets/js/look.js" defer></script>
+    <script src="./assets/js/carousel.js" defer></script>
+    <script src="./assets/js/humberger.js" defer></script>
+    <!-- <script src="./assets/js/user-script.js" defer></script> -->
+    <!-- <script src="./public/assets/js/usr.js" defer></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+   
+    <script>
+        // Wait for DOM and all scripts to load
+    document.addEventListener('DOMContentLoaded', function() {
+       
+        setTimeout(function() {
+            // Save references to your original functions
+            const originalFilterByCategory = window.filterByCategory;
+            const originalShowAllProducts = window.showAllProducts;
+            
+            // Safe SEO title updater - only runs if functions exist
+            if (typeof originalFilterByCategory === 'function') {
+                // Wrap filterByCategory to add SEO title updates
+                window.filterByCategory = function(category) {
+                    // Update page title for SEO
+                    updateSEOTitleForCategory(category);
+                    
+                    // Call original function
+                    return originalFilterByCategory(category);
+                };
+            }
+            
+            if (typeof originalShowAllProducts === 'function') {
+                // Wrap showAllProducts
+                window.showAllProducts = function() {
+                    // Reset to original title
+                    document.title = "Vitronics Technologies Ltd - Electronics & Industrial Spares in Kenya | Plcs, HMI Screens, Accessories";
+                    
+                    // Call original function
+                    return originalShowAllProducts();
+                };
+            }
+            
+            // Helper function to update SEO titles
+            // function updateSEOTitleForCategory(category) {
+            //     const categoryTitles = {
+            //         'screens': 'LCD Screens & Mobile Displays | Vitronics Technologies',
+            //         'phones': 'Mobile Phones & Smartphones | Vitronics Technologies Kenya',
+            //         'phones accessories': 'Phone Accessories & Cases | Vitronics Store',
+            //         'computer': 'Computers & Networking Equipment | Vitronics Technologies',
+            //         'batteries': 'Mobile Batteries & Power Banks | Vitronics Kenya',
+            //         'smartWatches': 'Smart Watches & Wearables | Vitronics Technologies'
+            //     };
+                
+            //     if (categoryTitles[category]) {
+            //         document.title = categoryTitles[category];
+            //     }
+            // }
+            
+            // Add lazy loading to images for better performance SEO
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('loading')) {
+                    img.setAttribute('loading', 'lazy');
+                }
+                
+                // Ensure all images have alt text
+                if (!img.alt || img.alt.trim() === '') {
+                    if (img.src.includes('logo')) {
 
-    <script src="./assets/js/script.js"></script>
-    <script src="./assets/js/helper.js"></script>
-    <script src="./assets/js/look.js"></script>
-    <script src="./assets/js/carousel.js"></script>
-    <script src="./assets/js/humberger.js"></script>
-     <script src="./assets/js/user-script.js"></script>
-  <script src="./assets/js/usr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
+                    img.alt = 'Vitronics Technologies Ltd Logo';
+                    } else if (img.src.includes('sensors')) {
+                    img.alt = 'Industrial spares and electronics at Vitronics';
+                    } else if (img.src.includes('cases')) {
+                    img.alt = 'Indusrtial spares and accessories';
+                    }
+                }
+            });
+            
+            // Update section title based on category (optional visual feedback)
+            const sectionTitle = document.getElementById('section-title');
+            if (sectionTitle) {
+                // Listen for URL hash changes (if you use hash for filtering)
+                window.addEventListener('hashchange', function() {
+                    const hash = window.location.hash.substring(1);
+                    if (hash) {
+                        updateSectionTitle(hash);
+                    }
+                });
+            }
+            
+        }, 100); // Small delay to ensure your scripts are loaded
+    });
+    
+    // Function to safely update section title (separate from filter function)
+    function updateSectionTitle(category) {
+        const titleMap = {
+            'screens': 'LCD Screens',
+            'phones': 'Mobile Phones',
+            'phones accessories': 'Phone Accessories',
+            'computer': 'Computers & Network',
+            'batteries': 'Batteries',
+            'smartWatches': 'Smart Watches'
+        };
+        
+        const titleElement = document.getElementById('section-title');
+        if (titleElement && titleMap[category]) {
+            titleElement.textContent = titleMap[category];
+        } else if (titleElement && category === 'all') {
+            titleElement.textContent = 'All Products';
+        }
+    }
+    </script>
 </body>
+
 </html>

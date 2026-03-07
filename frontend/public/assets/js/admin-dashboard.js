@@ -160,7 +160,7 @@
         async function loadDashboardStats() {
             try {
                 console.log('🔄 Loading dashboard stats...');
-                
+
                 // Load products
                 const products = await apiCall('/api/products');
                 const productsCount = Array.isArray(products) ? products.length : 0;
@@ -180,10 +180,10 @@
                 // const orders = await apiCall('/api/orders');
                 // const ordersCount = Array.isArray(orders) ? orders.length : 0;
                 // document.getElementById('totalOrders').textContent = ordersCount;
-                
+
                 // Calculate pending orders
                 const orders = await apiCall('/api/orders');
-                const pendingOrdersCount = Array.isArray(orders) ? 
+                const pendingOrdersCount = Array.isArray(orders) ?
                     orders.filter(order => order.status === 'pending').length : 0;
                 document.getElementById('pendingOrders').textContent = pendingOrdersCount;
 
@@ -224,6 +224,9 @@
                 showNotification('Error loading products: ' + error.message, 'error');
             }
         }
+
+
+        
 
         function displayProducts(products) {
             const productsList = document.getElementById('productsList');
@@ -298,7 +301,7 @@ function searchProducts(query) {
 async function loadOrders() {
     try {
         const token = localStorage.getItem('adminToken') || ('authToken');
-        const response = await fetch('http://localhost:3000/api/orders', {
+        const response = await fetch('/api/orders', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -1012,15 +1015,17 @@ function displayOrderDetails(order) {
     const total = parseFloat(order.total_amount || order.total || 0);
     const items = order.items || [];
     // const username_name = order.username || order.customer?.name || order.customerName || 'No name';
-    const username_name =
-    order.customer_name ||     // ← ADD THIS
-    order.username ||
-    order.name ||
-    order.customer?.name ||
-    order.customerName ||
-    'No name';
+    // const username_name =
+    // order.customer_Name ||
+    // 'No name';
     // const customerEmail = order.customer_email || order.customer?.email || 'N/A';
-
+    const username_name =
+        order.customer_name ||     // ← ADD THIS
+        order.username ||
+        order.name ||
+        order.customer?.name ||
+        order.customerName ||
+        'No name';
     // Get status badge class
     const statusClass = `status-${status.toLowerCase()}`;
 
