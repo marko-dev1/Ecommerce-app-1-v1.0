@@ -117,7 +117,7 @@
 
     <!-- EXISTING STYLES -->
     <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/landing.css">
+    <!-- <link rel="stylesheet" href="./assets/css/landing.css"> -->
     <link rel="stylesheet" href="./assets/css/carousel.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">   -->
@@ -132,15 +132,12 @@
 <body>
 <!-- Navigation -->
 <header class="sticky-top" >
-    <nav class="navbar navbar-expand-lg">
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white"> -->
-
-        <div class="container">
+    <nav class="navbar navbar-expand-lg"> <div class="container">
             <a class="navbar-brand" href="index.html">
-                <!-- <img src="assets/logo/vitronics technologies ltd.png" class="logo" alt="Vitronics Technologies Logo"> -->
-                <img src="assets/logo/vitronics technologies ltd.png"
+              
+                <img src="assets/logo/logo.png"
                      class="logo"
-                     alt="Vitronics Technologies Logo"
+                     alt="Vitronics Technologies Ltd"
                      loading="lazy">
                 <span class="brand-text">Vitronics Technologies</span>
             </a>
@@ -187,11 +184,7 @@
                             </button>
                     </div>
 
-                    
-
                     <div class="cart-icon" onclick="app.showCart()">
-                   
-
                         <i class="fas fa-shopping-cart"></i>
                         <span id="cart-count" class="cart-badge">0</span>
                     </div>
@@ -362,7 +355,8 @@
                     <button class="btn btn-outline-primary" onclick="filterByCategory('PLCs & Controllers')">PLCs</button>
                     <button class="btn btn-outline-primary" onclick="filterByCategory('Sensors')">Sensors</button>
                     <button class="btn btn-outline-primary" onclick="filterByCategory('Motors')" >Motors</button>
-                    <button class="btn btn-outline-primary" onclick="showNewArrivals() ('New arrivals')">New Arrivals</button>
+                  <button class="btn btn-outline-primary" onclick="showNewArrivals()">New Arrivals</button>
+                <!-- <button class="btn btn-outline-primary" onclick="showNewArrivals() ('New arrivals')">New Arrivals</button> -->
                 </div>
             </div>
         </div>
@@ -514,6 +508,7 @@
             const originalFilterByCategory = window.filterByCategory;
             const originalShowAllProducts = window.showAllProducts;
             
+            
             // Safe SEO title updater - only runs if functions exist
             if (typeof originalFilterByCategory === 'function') {
                 // Wrap filterByCategory to add SEO title updates
@@ -537,21 +532,22 @@
                 };
             }
             
-            // Helper function to update SEO titles
-            // function updateSEOTitleForCategory(category) {
-            //     const categoryTitles = {
-            //         'screens': 'LCD Screens & Mobile Displays | Vitronics Technologies',
-            //         'phones': 'Mobile Phones & Smartphones | Vitronics Technologies Kenya',
-            //         'phones accessories': 'Phone Accessories & Cases | Vitronics Store',
-            //         'computer': 'Computers & Networking Equipment | Vitronics Technologies',
-            //         'batteries': 'Mobile Batteries & Power Banks | Vitronics Kenya',
-            //         'smartWatches': 'Smart Watches & Wearables | Vitronics Technologies'
-            //     };
+            //Helper function to update SEO titles
+            function updateSEOTitleForCategory(category) {
+                const categoryTitles = {
+              'all': 'All Products',
+            'controllers': 'Plcs & Controllers',
+            'instrumentation': 'Instrumentation',
+            'display': 'Displays & Monitors',
+            'motors': 'Motors, Drives & Accessories',
+            'sensors':'Sensors',
+             'smartdevices': 'Smart Devices'
+                };
                 
-            //     if (categoryTitles[category]) {
-            //         document.title = categoryTitles[category];
-            //     }
-            // }
+                if (categoryTitles[category]) {
+                    document.title = categoryTitles[category];
+                }
+            }
             
             // Add lazy loading to images for better performance SEO
             document.querySelectorAll('img').forEach(img => {

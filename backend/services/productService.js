@@ -13,6 +13,13 @@ class ProductService {
     return await Product.findById(id);
   }
 
+    static async getProductsByCategory(category) {
+    return await Product.findByCategory(category);
+  }
+  static async getNewArrivals(date) {
+    return await Product.findNewArrivals(date);
+}
+
   static async updateProduct(id, productData) {
     return await Product.update(id, productData);
   }
@@ -24,6 +31,8 @@ class ProductService {
   static async updateStock(id, stock) {
     return await Product.updateStock(id, stock);
   }
+
+  
 }
 
 module.exports = ProductService;

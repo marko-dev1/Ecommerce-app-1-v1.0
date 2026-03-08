@@ -1212,17 +1212,101 @@ Thank you! 🛒
             }
             
             this.displayProducts(products);
-            this.updateSectionTitle(category);
+            // this.updateSectionTitle(category);
         } catch (error) {
             // For demo, filter sample products
             const filteredProducts = category === 'all' 
                 ? this.products 
                 : this.products.filter(product => product.category === category);
             this.displayProducts(filteredProducts);
-            this.updateSectionTitle(category);
+            // this.updateSectionTitle(category);
         }
     }
 
+//     //latest arrival section title update
+
+//     async showNewArrivals() {
+//     this.showLoading();
+//     this.currentCategory = 'new arrivals';
+    
+//     try {
+//         // Try to fetch from backend with date filter
+//         const response = await fetch('/api/products/new-arrivals');
+        
+//         if (response.ok) {
+//             const newArrivals = await response.json();
+//             this.displayProducts(newArrivals);
+//         } else {
+//             // Fallback to client-side filtering
+//             const allResponse = await fetch('/api/products');
+//             const allProducts = await allResponse.json();
+            
+//             const threeMonthsAgo = new Date();
+//             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            
+//             const newArrivals = allProducts.filter(product => {
+//                 if (!product.created_at) return false;
+//                 const productDate = new Date(product.created_at);
+//                 return productDate >= threeMonthsAgo;
+//             });
+            
+//             this.displayProducts(newArrivals);
+//         }
+        
+//         // Update section title
+//         const title = document.getElementById('section-title');
+//         if (title) {
+//             title.textContent = 'New Arrivals (Last 3 Months)';
+//         }
+//     } catch (error) {
+//         console.error('Error showing new arrivals:', error);
+//         this.showError('Failed to load new arrivals');
+//     } finally {
+//         document.getElementById('loading').style.display = 'none';
+//     }
+// }
+
+
+async showNewArrivals() {
+    this.showLoading();
+    this.currentCategory = 'new-arrivals';
+    
+    try {
+        // Try to fetch from backend with date filter
+        const response = await fetch('/api/products/new-arrivals');
+        
+        if (response.ok) {
+            const newArrivals = await response.json();
+            this.displayProducts(newArrivals);
+        } else {
+            // Fallback to client-side filtering
+            const allResponse = await fetch('/api/products');
+            const allProducts = await allResponse.json();
+            
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            
+            const newArrivals = allProducts.filter(product => {
+                if (!product.created_at) return false;
+                const productDate = new Date(product.created_at);
+                return productDate >= threeMonthsAgo;
+            });
+            
+            this.displayProducts(newArrivals);
+        }
+        
+        // Update section title
+        const title = document.getElementById('section-title');
+        if (title) {
+            title.textContent = 'New Arrivals (Last 3 Months)';
+        }
+    } catch (error) {
+        console.error('Error showing new arrivals:', error);
+        this.showError('Failed to load new arrivals');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
+}
 
 displayProducts(products) {
   const grid = document.getElementById('products-grid');
@@ -1382,20 +1466,39 @@ displayProductModal(product) {
     modal.style.display = 'block';
     console.log('✅ Modal displayed');
 }
-    updateSectionTitle(category) {
-        const title = document.getElementById('section-title');
-        const categoryNames = {
-            'all': 'All Products',
-            'controllers': 'Plcs & Controllers',
-            'instrumentation': 'Instrumentation',
-            'display': 'Displays & Monitors',
-            'motors': 'Motors, Drives & Accessories',
-            'sensors':'Sensors',
-             'smartdevices': 'Smart Devices'
-        };
+    // updateSectionTitle(category) {
+    //     const title = document.getElementById('section-title');
+    //     const categoryNames = {
+    //         'all': 'All Products',
+    //         'controllers': 'Plcs & Controllers',
+    //         'instrumentation': 'Instrumentation',
+    //         'display': 'Displays & Monitors',
+    //         'motors': 'Motors, Drives & Accessories',
+    //         'sensors':'Sensors',
+    //          'smartdevices': 'Smart Devices'
+    //     };
         
-        title.textContent = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
-    }
+    //     title.textContent = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
+    // }
+
+    updateSectionTitle(category) {
+    const title = document.getElementById('section-title');
+    
+    // Exit silently if element doesn't exist
+    if (!title) return;
+    
+    const categoryNames = {
+        'all': 'All Products',
+        'controllers': 'Plcs & Controllers',
+        'instrumentation': 'Instrumentation',
+        'display': 'Displays & Monitors',
+        'motors': 'Motors, Drives & Accessories',
+        'sensors': 'Sensors',
+        'smartdevices': 'Smart Devices'
+    };
+    
+    title.textContent = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
+}
 
     showLoading() {
         document.getElementById('loading').style.display = 'block';
@@ -1632,3 +1735,21 @@ function searchProducts(query) {
 
 // Initialize the app
 const app = new ECommerceApp();
+
+// Make methods globally available
+window.showNewArrivals = () => app.showNewArrivals();
+window.showAllProducts = () => app.filterByCategory('all');
+window.filterByCategory = (category) => app.filterByCategory(category);
+window.showCart = () => app.showCart();
+window.searchProducts = (query) => {
+    console.log("Searching for:", query);
+   
+};
+
+// For scrolling to products section when category is clicked
+window.scrollAndFilter = (category) => {
+    // Scroll to products section
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    // Then filter products
+    app.filterByCategory(category);
+};

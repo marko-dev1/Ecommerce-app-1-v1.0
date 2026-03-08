@@ -16,6 +16,24 @@ class Product {
         return rows;
     }
 
+        static async findByCategory(category) {
+        try {
+            const query = 'SELECT * FROM products WHERE category = ? ORDER BY created_at DESC';
+            const [rows] = await pool.execute(query, [category]);
+            return rows;
+        } catch (error) {
+            console.error('Error finding products by category:', error);
+            throw error;
+        }
+    }
+//fetch latest products added in the last 90 days
+
+static async findNewArrivals(date) {
+    const query = 'SELECT * FROM products WHERE created_at >= ? ORDER BY created_at DESC';
+    const [rows] = await pool.execute(query, [date]);
+    return rows;
+}
+
     static async findById(id) {
         const query = 'SELECT * FROM products WHERE id = ?';
         const [rows] = await pool.execute(query, [id]);
